@@ -1,0 +1,34 @@
+{
+  "name": "MonthlyReport",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "month": {
+      "type": "number"
+    },
+    "year": {
+      "type": "number"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "pdf_drive_url": {
+      "type": "string"
+    },
+    "summary_data": {
+      "type": "object",
+      "default": {}
+    }
+  },
+  "required": [
+    "company_id",
+    "month",
+    "year"
+  ]
+}

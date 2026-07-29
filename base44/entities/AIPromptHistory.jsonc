@@ -1,0 +1,64 @@
+{
+  "name": "AIPromptHistory",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "style": {
+      "type": "string"
+    },
+    "mood": {
+      "type": "string"
+    },
+    "aspect_ratio": {
+      "type": "string"
+    },
+    "ai_target": {
+      "type": "string"
+    },
+    "include_text": {
+      "type": "boolean",
+      "default": false
+    },
+    "text_content": {
+      "type": "string"
+    },
+    "include_logo": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_mockup": {
+      "type": "boolean",
+      "default": false
+    },
+    "mockup_object": {
+      "type": "string"
+    },
+    "final_prompt": {
+      "type": "string"
+    },
+    "negative_prompt": {
+      "type": "string"
+    },
+    "usage_tip": {
+      "type": "string"
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "favorite": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "company_id"
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "name": "MediaAsset",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "file_name": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "gif"
+      ],
+      "default": "image"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "ai_generated",
+        "uploaded",
+        "content_idea"
+      ],
+      "default": "uploaded"
+    },
+    "title": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "product",
+        "lifestyle",
+        "brand",
+        "event",
+        "people",
+        "background",
+        "graphic",
+        "other"
+      ],
+      "default": "other"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "platform_fit": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "used_in_ideas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "use_count": {
+      "type": "number",
+      "default": 0
+    },
+    "ai_prompt": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "favorite": {
+      "type": "boolean",
+      "default": false
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "company_id",
+    "file_url"
+  ]
+}

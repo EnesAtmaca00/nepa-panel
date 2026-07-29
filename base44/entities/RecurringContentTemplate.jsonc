@@ -1,0 +1,81 @@
+{
+  "name": "RecurringContentTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "monthly",
+        "custom"
+      ],
+      "default": "weekly"
+    },
+    "day_of_week": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 7,
+      "description": "1=Pzt, 7=Pzr"
+    },
+    "day_of_month": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 31
+    },
+    "design_brief_template": {
+      "type": "string"
+    },
+    "caption_template": {
+      "type": "string"
+    },
+    "visual_style_notes": {
+      "type": "string"
+    },
+    "reminder_days_before": {
+      "type": "number",
+      "default": 2
+    },
+    "subscribed_companies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "emoji": {
+      "type": "string",
+      "default": "\ud83d\udd01"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "frequency"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": [
+          "admin",
+          "manager"
+        ]
+      }
+    },
+    "read": {},
+    "update": {},
+    "delete": {
+      "user_condition": {
+        "role": [
+          "admin",
+          "manager"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "name": "ResourceTool",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ai_image",
+        "ai_video",
+        "ai_text",
+        "ai_audio",
+        "design",
+        "stock_media",
+        "video_editing",
+        "social_media",
+        "analytics",
+        "automation",
+        "productivity",
+        "inspiration",
+        "research",
+        "other"
+      ],
+      "default": "other"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "is_free": {
+      "type": "boolean",
+      "default": true
+    },
+    "pricing_note": {
+      "type": "string"
+    },
+    "favorite": {
+      "type": "boolean",
+      "default": false
+    },
+    "use_cases": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "added_by": {
+      "type": "string"
+    },
+    "click_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_clicked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "url"
+  ]
+}

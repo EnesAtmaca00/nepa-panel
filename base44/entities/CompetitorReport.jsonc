@@ -1,0 +1,213 @@
+{
+  "name": "CompetitorReport",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "competitors_analyzed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "handle": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "recent_activity": {
+            "type": "string"
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "posts_per_week": {
+            "type": "number"
+          },
+          "avg_engagement": {
+            "type": "string"
+          },
+          "top_hashtags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "best_post_time": {
+            "type": "string"
+          },
+          "content_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "default": []
+    },
+    "weaknesses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      },
+      "default": []
+    },
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      },
+      "default": []
+    },
+    "opportunity_posts": {
+      "type": "array",
+      "description": "AI taraf\u0131ndan \u00fcretilen f\u0131rsat payla\u015f\u0131m \u00f6nerileri",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "caption_idea": {
+            "type": "string"
+          },
+          "best_time": {
+            "type": "string"
+          },
+          "hashtags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      },
+      "default": []
+    },
+    "top_hashtags_overall": {
+      "type": "array",
+      "description": "T\u00fcm rakiplerde en \u00e7ok kullan\u0131lan hashtagler (frekans s\u0131ral\u0131)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "count": {
+            "type": "number"
+          },
+          "competitors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "default": []
+    },
+    "posting_frequency_summary": {
+      "type": "object",
+      "description": "Rakip bazl\u0131 haftal\u0131k payla\u015f\u0131m frekans \u00f6zeti",
+      "default": {}
+    },
+    "executive_summary": {
+      "type": "string"
+    },
+    "pdf_drive_url": {
+      "type": "string"
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "generating",
+        "completed",
+        "failed"
+      ],
+      "default": "generating"
+    },
+    "error_message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id"
+  ]
+}

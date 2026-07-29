@@ -1,0 +1,62 @@
+{
+  "name": "RecurringContentInstance",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string"
+    },
+    "template_name": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "done",
+        "skipped"
+      ],
+      "default": "pending"
+    },
+    "linked_content_idea_id": {
+      "type": "string"
+    },
+    "design_drive_url": {
+      "type": "string"
+    },
+    "skipped_reason": {
+      "type": "string"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reminder_sent_2days": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_sent_1day": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_sent_today": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "template_id",
+    "company_id",
+    "target_date"
+  ]
+}

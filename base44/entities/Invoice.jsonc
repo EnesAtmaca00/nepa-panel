@@ -1,0 +1,145 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "TRY",
+        "EUR"
+      ],
+      "default": "TRY"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "monthly_subscription",
+        "one_time"
+      ],
+      "default": "monthly_subscription"
+    },
+    "service_reference": {
+      "type": "string"
+    },
+    "issue_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "overdue",
+        "partial"
+      ],
+      "default": "pending"
+    },
+    "paid_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "paid_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "payment_method": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "pdf_drive_url": {
+      "type": "string"
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "line_items": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "default": 1
+          },
+          "unit_price": {
+            "type": "number",
+            "default": 0
+          },
+          "tax_rate": {
+            "type": "number",
+            "default": 20
+          },
+          "total": {
+            "type": "number",
+            "default": 0
+          }
+        }
+      }
+    },
+    "tax_mode": {
+      "type": "string",
+      "enum": [
+        "included",
+        "excluded",
+        "none"
+      ],
+      "default": "excluded"
+    },
+    "subtotal": {
+      "type": "number",
+      "default": 0
+    },
+    "tax_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "total_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "invoice_number": {
+      "type": "string"
+    },
+    "template_id": {
+      "type": "string"
+    },
+    "last_reminder_sent_days": {
+      "type": "number"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "company_id",
+    "amount"
+  ]
+}

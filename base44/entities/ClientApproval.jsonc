@@ -1,0 +1,50 @@
+{
+  "name": "ClientApproval",
+  "type": "object",
+  "properties": {
+    "content_idea_id": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "public_token": {
+      "type": "string"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "viewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "revision",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "client_comments": {
+      "type": "string"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_by_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "content_idea_id",
+    "public_token"
+  ]
+}

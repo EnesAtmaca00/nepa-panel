@@ -1,0 +1,30 @@
+{
+  "name": "MedicationConversation",
+  "type": "object",
+  "properties": {
+    "medication_id": {
+      "type": "string"
+    },
+    "dose_id": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "outgoing",
+        "incoming"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "direction",
+    "message"
+  ]
+}

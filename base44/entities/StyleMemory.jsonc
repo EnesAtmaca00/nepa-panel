@@ -1,0 +1,64 @@
+{
+  "name": "StyleMemory",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "analyzed_files_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_analysis_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dominant_colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "secondary_colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "typography_style": {
+      "type": "string"
+    },
+    "composition_patterns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "common_elements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "mood_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ai_summary": {
+      "type": "string"
+    },
+    "prompt_injection": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id"
+  ]
+}

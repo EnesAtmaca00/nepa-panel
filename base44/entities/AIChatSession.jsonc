@@ -1,0 +1,98 @@
+{
+  "name": "AIChatSession",
+  "properties": {
+    "actions_taken": {
+      "default": [],
+      "description": "Bu oturumda yap\u0131lan aksiyonlar\u0131n logu",
+      "items": {
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "entity_id": {
+            "type": "string"
+          },
+          "entity_type": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "channel": {
+      "default": "web",
+      "description": "web veya telegram",
+      "enum": [
+        "web",
+        "telegram"
+      ],
+      "type": "string"
+    },
+    "company_id": {
+      "description": "Bo\u015f ise genel sohbet",
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "complex_mode": {
+      "default": false,
+      "type": "boolean"
+    },
+    "last_message_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "message_count": {
+      "default": 0,
+      "type": "number"
+    },
+    "messages": {
+      "default": [],
+      "items": {
+        "properties": {
+          "actions": {
+            "description": "Bu mesajda al\u0131nan aksiyonlar",
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "content": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "telegram_chat_id": {
+      "description": "Telegram'dan geldiyse chat ID",
+      "type": "string"
+    },
+    "title": {
+      "description": "Sohbetin k\u0131sa ba\u015fl\u0131\u011f\u0131",
+      "type": "string"
+    }
+  },
+  "required": [],
+  "type": "object"
+}

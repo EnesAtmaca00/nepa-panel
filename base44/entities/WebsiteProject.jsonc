@@ -1,0 +1,223 @@
+{
+  "name": "WebsiteProject",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "string"
+    },
+    "site_type": {
+      "type": "string",
+      "enum": [
+        "kurumsal",
+        "e-ticaret",
+        "portfolio",
+        "landing",
+        "blog",
+        "rezervasyon"
+      ],
+      "default": "kurumsal"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "page_count": {
+      "type": "number",
+      "default": 5
+    },
+    "estimated_page_count": {
+      "type": "number",
+      "default": 5
+    },
+    "wants_animation": {
+      "type": "boolean",
+      "default": false
+    },
+    "animation_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Se\u00e7ilen animasyon tipleri: scroll_reveal, parallax, mouse_track, 3d_elements, micro_interactions, page_transitions, text_animations, loading_animations"
+    },
+    "animation_intensity": {
+      "type": "string",
+      "enum": [
+        "subtle",
+        "balanced",
+        "intense"
+      ],
+      "default": "balanced",
+      "description": "Animasyon yo\u011funluk seviyesi: subtle (hafif/zarif), balanced (dengeli), intense (yo\u011fun/g\u00f6steri\u015fli)"
+    },
+    "design_style": {
+      "type": "string",
+      "enum": [
+        "minimal",
+        "modern",
+        "bold",
+        "elegant",
+        "playful",
+        "brutalist",
+        "glassmorphism",
+        "neomorphism",
+        "retro",
+        "corporate"
+      ],
+      "default": "modern",
+      "description": "Genel tasar\u0131m stili tercihi"
+    },
+    "color_mood": {
+      "type": "string",
+      "enum": [
+        "light_airy",
+        "dark_premium",
+        "vibrant_colorful",
+        "muted_pastel",
+        "monochrome",
+        "brand_colors"
+      ],
+      "default": "brand_colors",
+      "description": "Renk modu tercihi"
+    },
+    "extra_specs": {
+      "type": "string"
+    },
+    "reference_links": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "old_website_url": {
+      "type": "string",
+      "description": "Firman\u0131n mevcut/eski web sitesi \u2014 i\u00e7erik buradan \u00e7ekilir"
+    },
+    "old_website_content": {
+      "type": "object",
+      "default": {},
+      "description": "Eski siteden \u00e7ekilen i\u00e7erik: hakkimizda, misyon, vizyon, urunler, yorumlar, iletisim vb."
+    },
+    "ai_tool": {
+      "type": "string",
+      "enum": [
+        "base44",
+        "kimya",
+        "google_antigravity",
+        "cursor",
+        "bolt",
+        "lovable",
+        "other"
+      ],
+      "default": "base44"
+    },
+    "ai_tool_other": {
+      "type": "string"
+    },
+    "architecture": {
+      "type": "object"
+    },
+    "generated_prompts": {
+      "type": "object"
+    },
+    "revision_feedback": {
+      "type": "string"
+    },
+    "revision_count": {
+      "type": "number",
+      "default": 0
+    },
+    "generation_status": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "generating",
+        "completed",
+        "error"
+      ],
+      "default": "idle"
+    },
+    "pages_plan": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": []
+    },
+    "design_url": {
+      "type": "string"
+    },
+    "staging_url": {
+      "type": "string"
+    },
+    "production_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "design",
+        "development",
+        "client_review",
+        "live"
+      ],
+      "default": "planning"
+    },
+    "delivery_status": {
+      "type": "string",
+      "enum": [
+        "Planlan\u0131yor",
+        "Analiz A\u015famas\u0131nda",
+        "Mimari Haz\u0131rland\u0131",
+        "Yap\u0131m A\u015famas\u0131nda",
+        "M\u00fc\u015fteri \u0130ncelemesinde",
+        "Teslim Edildi",
+        "Revizyon \u0130stendi"
+      ],
+      "default": "Planlan\u0131yor"
+    },
+    "approval_mode": {
+      "type": "string",
+      "enum": [
+        "none",
+        "manual_internal",
+        "client_approval"
+      ],
+      "default": "manual_internal"
+    },
+    "approval_status": {
+      "type": "string",
+      "default": "pending_internal"
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": []
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "company_id",
+    "project_name"
+  ]
+}

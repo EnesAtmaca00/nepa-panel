@@ -1,0 +1,52 @@
+{
+  "name": "EmailThread",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string"
+    },
+    "email_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "last_activity": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "participant_count": {
+      "type": "number",
+      "default": 1
+    },
+    "body_text": {
+      "type": "string",
+      "format": "longtext"
+    },
+    "snippet": {
+      "type": "string"
+    },
+    "sender_name": {
+      "type": "string"
+    },
+    "sender_email": {
+      "type": "string"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "gmail_thread_id": {
+      "type": "string"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "subject"
+  ]
+}

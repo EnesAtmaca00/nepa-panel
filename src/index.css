@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter Tight', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Backgrounds — sıcak gri tonları */
+    --bg-base: 30 8% 98%;
+    --bg-surface: 0 0% 100%;
+    --bg-elevated: 30 8% 96%;
+    --bg-sunken: 30 12% 92%;
+
+    /* Shadcn uyumlu aliases */
+    --background: 30 8% 98%;
+    --foreground: 220 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+
+    /* Text seviyeleri */
+    --text-primary: 220 25% 12%;
+    --text-secondary: 220 12% 35%;
+    --text-tertiary: 220 8% 55%;
+    --text-quaternary: 220 6% 70%;
+
+    /* Border seviyeleri */
+    --border-subtle: 30 8% 90%;
+    --border-default: 30 8% 85%;
+    --border-strong: 30 8% 75%;
+
+    /* Shadcn uyumlu */
+    --border: 30 8% 85%;
+    --input: 30 8% 85%;
+
+    /* Accent — derin profesyonel mavi */
+    --accent: 217 91% 50%;
+    --accent-foreground: 0 0% 100%;
+    --accent-hover: 217 91% 45%;
+    --accent-bg: 217 91% 96%;
+    --accent-border: 217 80% 80%;
+
+    /* Warm accent */
+    --warm-accent: 180 50% 38%;
+    --warm-bg: 180 50% 94%;
+
+    /* Shadcn primary/secondary */
+    --primary: 220 25% 12%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 30 8% 96%;
+    --secondary-foreground: 220 25% 12%;
+    --muted: 30 8% 96%;
+    --muted-foreground: 220 8% 55%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 65% 38%;
+    --success-bg: 142 50% 95%;
+    --warning: 38 92% 45%;
+    --warning-bg: 38 92% 96%;
+    --danger: 0 70% 50%;
+    --danger-bg: 0 70% 97%;
+
+    --highlight: 50 92% 60%;
+    --quote: 280 35% 50%;
+
+    --gold: 180 50% 35%;
+    --gold-foreground: 0 0% 100%;
+
+    --ring: 217 91% 50%;
+    --radius: 0.5rem;
+    --radius-tight: 4px;
+    --radius-default: 8px;
+    --radius-card: 10px;
+    --radius-large: 14px;
+    --radius-pill: 999px;
+
+    /* Sidebar */
+    --sidebar-background: 30 8% 98%;
+    --sidebar-foreground: 220 25% 12%;
+    --sidebar-primary: 217 91% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 8% 93%;
+    --sidebar-accent-foreground: 220 25% 12%;
+    --sidebar-border: 30 8% 90%;
+    --sidebar-ring: 217 91% 50%;
+
+    --chart-1: 217 91% 50%;
+    --chart-2: 220 13% 30%;
+    --chart-3: 142 65% 38%;
+    --chart-4: 0 70% 50%;
+    --chart-5: 180 50% 35%;
+
+    /* Animation */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .dark {
+    --bg-base: 220 20% 9%;
+    --bg-surface: 220 18% 12%;
+    --bg-elevated: 220 16% 15%;
+    --bg-sunken: 220 22% 7%;
+
+    --background: 220 20% 9%;
+    --foreground: 220 15% 92%;
+    --card: 220 18% 12%;
+    --card-foreground: 220 15% 92%;
+    --popover: 220 18% 12%;
+    --popover-foreground: 220 15% 92%;
+
+    --text-primary: 220 15% 92%;
+    --text-secondary: 220 10% 70%;
+    --text-tertiary: 220 8% 55%;
+    --text-quaternary: 220 6% 40%;
+
+    --border-subtle: 220 16% 17%;
+    --border-default: 220 14% 22%;
+    --border-strong: 220 12% 30%;
+
+    --border: 220 14% 22%;
+    --input: 220 14% 22%;
+
+    --accent: 217 91% 60%;
+    --accent-bg: 217 50% 18%;
+    --accent-border: 217 60% 30%;
+
+    --warm-accent: 180 50% 48%;
+    --warm-bg: 180 40% 18%;
+
+    --primary: 220 15% 92%;
+    --primary-foreground: 220 25% 12%;
+    --secondary: 220 16% 15%;
+    --secondary-foreground: 220 15% 92%;
+    --muted: 220 16% 15%;
+    --muted-foreground: 220 8% 55%;
+
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 142 60% 50%;
+    --warning: 38 90% 55%;
+    --danger: 0 75% 60%;
+
+    --highlight: 50 80% 55%;
+    --quote: 280 50% 65%;
+
+    --gold: 180 50% 48%;
+    --gold-foreground: 220 25% 12%;
+
+    --sidebar-background: 220 22% 7%;
+    --sidebar-foreground: 220 14% 88%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 220 25% 12%;
+    --sidebar-accent: 220 16% 14%;
+    --sidebar-accent-foreground: 220 14% 88%;
+    --sidebar-border: 220 14% 17%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    transition-timing-function: var(--ease-out-expo);
+    transition-duration: 150ms;
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-feature-settings: "ss01", "cv11", "tnum";
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  html {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    /* iOS'ta yatay kaymayı tamamen engelle */
+    max-width: 100%;
+  }
+
+  /* Mobilde taşmayı önle — uzun kelimeler/URL'ler sığar, sayfayı kaydırmaz */
+  @media (max-width: 640px) {
+    img, video, svg, table { max-width: 100%; }
+  }
+
+  /* Selection */
+  ::selection {
+    background: hsl(var(--accent) / 0.2);
+    color: hsl(var(--text-primary));
+  }
+
+  /* Focus ring — sadece klavyede */
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Button active feedback */
+  button:active {
+    transform: scale(0.98);
+    transition-duration: 100ms;
+  }
+}
+
+@layer utilities {
+  /* Font ailesi */
+  .font-sans { font-family: var(--font-sans); }
+  .font-serif { font-family: var(--font-serif); }
+  .font-mono { font-family: var(--font-mono); }
+
+  /* Gold */
+  .gold-gradient {
+    background: linear-gradient(135deg, #2a7c7c 0%, #4aadad 50%, #2a7c7c 100%);
+  }
+  .navy-gradient {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  }
+  .text-gold { color: hsl(var(--gold)); }
+  .bg-gold { background-color: hsl(var(--gold)); }
+  .border-gold { border-color: hsl(var(--gold)); }
+
+  /* Surface tipleri */
+  .surface-card {
+    background: hsl(var(--bg-surface));
+    border: 1px solid hsl(var(--border-default));
+    border-radius: var(--radius-card);
+    padding: 20px;
+  }
+  .surface-highlighted {
+    background: hsl(var(--bg-surface));
+    border: 1px solid hsl(var(--border-default));
+    border-left: 3px solid hsl(var(--accent));
+    border-radius: var(--radius-card);
+    padding: 20px 20px 20px 24px;
+  }
+  .surface-sunken {
+    background: hsl(var(--bg-elevated));
+    border: 1px solid hsl(var(--border-subtle));
+    border-radius: var(--radius-default);
+    padding: 16px;
+  }
+  .surface-quote {
+    background: hsl(var(--quote) / 0.05);
+    border-left: 2px solid hsl(var(--quote));
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: hsl(var(--text-secondary));
+  }
+
+  /* Status dot */
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+  .status-dot-active { background: hsl(var(--success)); box-shadow: 0 0 0 2px hsl(var(--success) / 0.15); }
+  .status-dot-paused { background: hsl(var(--warning)); box-shadow: 0 0 0 2px hsl(var(--warning) / 0.15); }
+  .status-dot-ended  { background: hsl(var(--text-quaternary)); }
+
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0%   { background-position: -1000px 0; }
+    100% { background-position:  1000px 0; }
+  }
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--bg-elevated)) 0%,
+      hsl(var(--bg-sunken)) 50%,
+      hsl(var(--bg-elevated)) 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: var(--radius-default);
+  }
+
+  /* iOS Safe Area */
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+
+  /* Scrollbar */
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--border-strong));
+    border-radius: 999px;
+    border: 2px solid hsl(var(--bg-base));
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: hsl(var(--text-tertiary)); }
+
+  /* Global scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border-strong));
+    border-radius: 999px;
+    border: 2px solid hsl(var(--bg-base));
+  }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--text-tertiary)); }
+}

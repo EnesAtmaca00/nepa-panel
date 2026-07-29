@@ -1,0 +1,69 @@
+{
+  "name": "ImagePromptDraft",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "include_text": {
+      "type": "boolean",
+      "default": false
+    },
+    "text_content": {
+      "type": "string"
+    },
+    "include_logo": {
+      "type": "boolean",
+      "default": false
+    },
+    "logo_placement": {
+      "type": "string"
+    },
+    "is_mockup": {
+      "type": "boolean",
+      "default": false
+    },
+    "mockup_object": {
+      "type": "string"
+    },
+    "style": {
+      "type": "string"
+    },
+    "mood": {
+      "type": "string"
+    },
+    "aspect_ratio": {
+      "type": "string",
+      "default": "1:1"
+    },
+    "color_overrides": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ai_target": {
+      "type": "string",
+      "default": "midjourney"
+    },
+    "final_prompt": {
+      "type": "string"
+    },
+    "final_negative_prompt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "topic"
+  ],
+  "rls": {
+    "create": null,
+    "read": null,
+    "update": null,
+    "delete": null
+  }
+}

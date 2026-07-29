@@ -1,0 +1,38 @@
+{
+  "name": "FirmaBaglamHafizasi",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "icerik_ozeti": {
+      "type": "object",
+      "default": {},
+      "description": "Toplam i\u00e7erik, platform ba\u015far\u0131, pillar da\u011f\u0131l\u0131m, son ba\u015fl\u0131klar"
+    },
+    "platform_basari_oranlari": {
+      "type": "object",
+      "default": {},
+      "description": "Platform baz\u0131nda onay oran\u0131 ve ortalama audit skoru"
+    },
+    "zenginlestirme_verisi": {
+      "type": "object",
+      "default": {},
+      "description": "Enricher ajan\u0131ndan gelen analiz: brand_keywords, hedef_kitle, rakip avantaj, f\u0131rsatlar"
+    },
+    "sektor_icgoru": {
+      "type": "string",
+      "description": "\u00c7apraz firma \u00f6\u011frenmeden gelen sekt\u00f6rel i\u00e7g\u00f6r\u00fc metni"
+    },
+    "son_guncelleme": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "company_id"
+  ]
+}

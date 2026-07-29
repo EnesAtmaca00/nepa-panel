@@ -1,0 +1,152 @@
+{
+  "name": "PublishSchedule",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "content_idea_id": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram_post",
+        "instagram_reels",
+        "instagram_story",
+        "tiktok",
+        "youtube",
+        "linkedin",
+        "facebook",
+        "twitter",
+        "other"
+      ],
+      "default": "instagram_post"
+    },
+    "target_account_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Payla\u015f\u0131m yap\u0131lacak ba\u011fl\u0131 SocialMediaAccount id'leri. Bo\u015fsa platforma uyan t\u00fcm ba\u011fl\u0131 hesaplar."
+    },
+    "account_handle": {
+      "type": "string"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video"
+      ],
+      "default": "image",
+      "description": "G\u00f6rsel mi video mu"
+    },
+    "tiktok_post_mode": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "inbox"
+      ],
+      "default": "inbox",
+      "description": "TikTok payla\u015f\u0131m modu: direct (otomatik yay\u0131n) veya inbox (m\u00fc\u015fteri tasla\u011f\u0131na g\u00f6nder)"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "media_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "publish_type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "auto"
+      ],
+      "default": "manual"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "pending_approval",
+        "approved",
+        "rejected"
+      ],
+      "default": "approved",
+      "description": "Otomatik payla\u015f\u0131m \u00f6ncesi onay durumu"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "rejection_reason": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "posting",
+        "published",
+        "failed",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "published_by": {
+      "type": "string"
+    },
+    "publish_results": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": [],
+      "description": "Hesap bazl\u0131 payla\u015f\u0131m sonu\u00e7lar\u0131"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "reminder_sent_30min": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_sent_now": {
+      "type": "boolean",
+      "default": false
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "company_id",
+    "platform",
+    "scheduled_at"
+  ]
+}

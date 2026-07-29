@@ -1,0 +1,45 @@
+{
+  "name": "SektorAnalizi",
+  "type": "object",
+  "properties": {
+    "sektor": {
+      "type": "string"
+    },
+    "firma_sayisi": {
+      "type": "number",
+      "default": 0
+    },
+    "icerik_sayisi": {
+      "type": "number",
+      "default": 0
+    },
+    "platform_onay_oranlari": {
+      "type": "object",
+      "default": {},
+      "description": "Platform baz\u0131nda {total, approved} say\u0131lar\u0131"
+    },
+    "en_basarili_platform": {
+      "type": "string"
+    },
+    "pillar_dagilimi": {
+      "type": "object",
+      "default": {
+        "egit": 0,
+        "eglendir": 0,
+        "sat": 0,
+        "guven": 0
+      }
+    },
+    "ortalama_audit_skoru": {
+      "type": "number",
+      "default": 0
+    },
+    "son_analiz_tarihi": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "sektor"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "CodeRequest",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "\u0130ste\u011fin k\u0131sa ba\u015fl\u0131\u011f\u0131"
+    },
+    "description": {
+      "type": "string",
+      "format": "longtext",
+      "description": "Detayl\u0131 a\u00e7\u0131klama \u2014 hangi sayfada, ne de\u011fi\u015fmeli"
+    },
+    "page": {
+      "type": "string",
+      "description": "\u0130lgili sayfa/b\u00f6l\u00fcm (Dashboard, Ayarlar, AI Studio vb.)"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "done",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "resolution_note": {
+      "type": "string",
+      "description": "\u00c7\u00f6z\u00fcm notu \u2014 build chat taraf\u0131ndan tamamland\u0131\u011f\u0131nda"
+    }
+  },
+  "required": [
+    "title",
+    "description"
+  ]
+}

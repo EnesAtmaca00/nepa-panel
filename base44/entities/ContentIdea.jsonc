@@ -1,0 +1,125 @@
+{
+  "name": "ContentIdea",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "generated_brief": {
+      "type": "string"
+    },
+    "hook": {
+      "type": "string"
+    },
+    "caption": {
+      "type": "string"
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "media_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "work_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "ready",
+        "published"
+      ],
+      "default": "not_started"
+    },
+    "approval_mode": {
+      "type": "string",
+      "enum": [
+        "none",
+        "manual_internal",
+        "client_approval"
+      ],
+      "default": "manual_internal"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "pending_internal",
+        "approved",
+        "sent_to_client",
+        "client_approved",
+        "revision_requested",
+        "rejected"
+      ],
+      "default": "pending_internal"
+    },
+    "client_feedback": {
+      "type": "string"
+    },
+    "counts_toward_target": {
+      "type": "boolean",
+      "default": true
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "content_pillar": {
+      "type": "string",
+      "enum": [
+        "egit",
+        "eglendir",
+        "sat",
+        "guven"
+      ],
+      "description": "\u0130\u00e7erik dire\u011fi kategorisi"
+    },
+    "workflow_id": {
+      "type": "string",
+      "description": "\u00dcretim ak\u0131\u015f\u0131 ID'si (AgentWorkflowLog ile e\u015fle\u015fir)"
+    },
+    "audit_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Auditor ajan\u0131ndan gelen marka uyumu skoru"
+    },
+    "audit_suggestions": {
+      "type": "string",
+      "description": "Auditor \u00f6nerileri (birle\u015ftirilmi\u015f metin)"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "company_id",
+    "title"
+  ]
+}

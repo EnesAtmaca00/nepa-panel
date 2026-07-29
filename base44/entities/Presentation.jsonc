@@ -1,0 +1,163 @@
+{
+  "name": "Presentation",
+  "type": "object",
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "description": "Sunum haz\u0131rlanan m\u00fc\u015fteri / firma ad\u0131"
+    },
+    "company_id": {
+      "type": "string",
+      "description": "Sistemdeki Company kayd\u0131n\u0131n id'si (opsiyonel)"
+    },
+    "location": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "string"
+    },
+    "raw_input": {
+      "type": "string",
+      "format": "longtext",
+      "description": "Kullan\u0131c\u0131n\u0131n yazd\u0131\u011f\u0131 ham metin"
+    },
+    "ai_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ai_answers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "detected_services": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "meeting_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "title": {
+      "type": "string"
+    },
+    "short_summary": {
+      "type": "string"
+    },
+    "slides": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object"
+      }
+    },
+    "project_timeline_summary": {
+      "type": "string"
+    },
+    "persuasion_arguments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "plain_text_version": {
+      "type": "string",
+      "format": "longtext"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "ready",
+        "sent",
+        "accepted",
+        "rejected"
+      ],
+      "default": "draft"
+    },
+    "generation_status": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "generating",
+        "completed",
+        "error"
+      ],
+      "default": "idle",
+      "description": "AI \u00fcretim durumu \u2014 UI takibi i\u00e7in"
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "revision_count": {
+      "type": "number",
+      "default": 0
+    },
+    "revision_feedback": {
+      "type": "string",
+      "format": "longtext"
+    },
+    "workflow_id": {
+      "type": "string"
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string",
+      "description": "Sunumda kullan\u0131lacak logo URL'si"
+    },
+    "color_palette": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "audit_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "firma_baglam": {
+      "type": "object",
+      "default": {},
+      "description": "Hangi firma ba\u011flamlar\u0131n\u0131n kullan\u0131ld\u0131\u011f\u0131n\u0131 g\u00f6steren rozet verisi"
+    },
+    "internal_notes": {
+      "type": "object",
+      "default": {},
+      "description": "Ajans i\u00e7 notlar\u0131 \u2014 m\u00fc\u015fteriye g\u00f6sterilmez (maliyet, m\u00fczakere, riskler)"
+    },
+    "research_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Ara\u015ft\u0131rma kaynaklar\u0131 (Wikipedia, RestCountries, Jina vb.)"
+    },
+    "research_data": {
+      "type": "object",
+      "default": {},
+      "description": "Ham ara\u015ft\u0131rma verisi (debug + revize i\u00e7in)"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "client_name"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "TargetTracking",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "period_type": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "weekly"
+      ],
+      "default": "monthly"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "targets": {
+      "type": "object",
+      "default": {}
+    },
+    "achieved": {
+      "type": "object",
+      "default": {}
+    },
+    "completion_percentage": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "on_track",
+        "at_risk",
+        "behind",
+        "achieved",
+        "exceeded"
+      ],
+      "default": "on_track"
+    },
+    "last_calculated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "company_id",
+    "period_type",
+    "period_start",
+    "period_end"
+  ]
+}

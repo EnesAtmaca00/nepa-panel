@@ -1,0 +1,38 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "agency_role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "manager",
+        "editor",
+        "viewer"
+      ],
+      "default": "editor",
+      "description": "Ajans i\u00e7i yetki seviyesi"
+    },
+    "assigned_companies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Eri\u015febilece\u011fi \u015firket ID'leri (bo\u015f = t\u00fcm\u00fc)"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": []
+}

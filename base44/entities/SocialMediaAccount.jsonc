@@ -1,0 +1,54 @@
+{
+  "name": "SocialMediaAccount",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram",
+        "facebook",
+        "tiktok",
+        "linkedin",
+        "twitter"
+      ]
+    },
+    "account_username": {
+      "type": "string"
+    },
+    "platform_user_id": {
+      "type": "string",
+      "description": "Instagram Business / Facebook Page / LinkedIn person ID \u2014 payla\u015f\u0131m API'si i\u00e7in zorunlu"
+    },
+    "access_token": {
+      "type": "string"
+    },
+    "refresh_token": {
+      "type": "string"
+    },
+    "token_expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_connected": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_post_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "platform"
+  ]
+}

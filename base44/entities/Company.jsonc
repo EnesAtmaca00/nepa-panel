@@ -1,0 +1,224 @@
+{
+  "name": "Company",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "string"
+    },
+    "brand_description": {
+      "type": "string"
+    },
+    "target_audience": {
+      "type": "string"
+    },
+    "brand_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "color_palette": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "brand_voice_guide": {
+      "type": "string",
+      "format": "longtext"
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "social_handles": {
+      "type": "object",
+      "properties": {
+        "instagram": {
+          "type": "string"
+        },
+        "tiktok": {
+          "type": "string"
+        },
+        "x": {
+          "type": "string"
+        },
+        "linkedin": {
+          "type": "string"
+        },
+        "facebook": {
+          "type": "string"
+        }
+      }
+    },
+    "country": {
+      "type": "string",
+      "enum": [
+        "TR",
+        "BE",
+        "OTHER"
+      ],
+      "default": "TR"
+    },
+    "preferred_languages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "TR",
+          "NL",
+          "FR",
+          "EN"
+        ]
+      }
+    },
+    "agreed_services": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pricing_type": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "one_time",
+        "hybrid"
+      ],
+      "default": "monthly"
+    },
+    "monthly_fee": {
+      "type": "number",
+      "default": 0
+    },
+    "one_time_fee": {
+      "type": "number",
+      "default": 0
+    },
+    "currency": {
+      "type": "string",
+      "enum": [
+        "TRY",
+        "EUR"
+      ],
+      "default": "TRY"
+    },
+    "billing_day": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 31,
+      "default": 1
+    },
+    "contract_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "contract_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "contract_anniversary_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "brand_founded_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "ended"
+      ],
+      "default": "active"
+    },
+    "drive_folder_id": {
+      "type": "string"
+    },
+    "drive_folder_url": {
+      "type": "string"
+    },
+    "recurring_content_subscriptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "competitor_handles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "default_approval_mode": {
+      "type": "string",
+      "enum": [
+        "none",
+        "manual_internal",
+        "client_approval"
+      ],
+      "default": "manual_internal"
+    },
+    "monthly_targets": {
+      "type": "object"
+    },
+    "weekly_targets": {
+      "type": "object"
+    },
+    "target_reminders_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "recurring_counts_toward_target": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "string"
+    },
+    "tax_number": {
+      "type": "string"
+    },
+    "billing_address": {
+      "type": "string"
+    },
+    "billing_city": {
+      "type": "string"
+    },
+    "billing_postal_code": {
+      "type": "string"
+    },
+    "billing_country": {
+      "type": "string"
+    },
+    "billing_contact_name": {
+      "type": "string"
+    },
+    "billing_email": {
+      "type": "string"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

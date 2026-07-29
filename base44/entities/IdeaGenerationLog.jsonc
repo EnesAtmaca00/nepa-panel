@@ -1,0 +1,59 @@
+{
+  "name": "IdeaGenerationLog",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "content_type": {
+      "type": "string"
+    },
+    "tone": {
+      "type": "string"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "ideas": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "default": []
+    },
+    "ideas_count": {
+      "type": "number",
+      "default": 0
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "saved_to_calendar_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "company_id"
+  ]
+}

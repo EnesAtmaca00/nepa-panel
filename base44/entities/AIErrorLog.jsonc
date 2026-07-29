@@ -1,0 +1,56 @@
+{
+  "name": "AIErrorLog",
+  "type": "object",
+  "properties": {
+    "function_name": {
+      "type": "string",
+      "description": "Hatan\u0131n olu\u015ftu\u011fu backend fonksiyonu (aiInvoke, generateWebsiteArchitecture vb.)"
+    },
+    "task_type": {
+      "type": "string",
+      "description": "AI g\u00f6rev tipi (content_idea, web_architecture vb.)"
+    },
+    "model_used": {
+      "type": "string",
+      "description": "Hata an\u0131nda kullan\u0131lan model"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Kullan\u0131lan provider (openrouter, gemini vb.)"
+    },
+    "error_message": {
+      "type": "string",
+      "format": "longtext",
+      "description": "Hata mesaj\u0131 detay\u0131"
+    },
+    "error_type": {
+      "type": "string",
+      "enum": [
+        "timeout",
+        "api_error",
+        "parse_error",
+        "auth_error",
+        "no_api_key",
+        "other"
+      ],
+      "default": "other"
+    },
+    "context_info": {
+      "type": "string",
+      "description": "\u0130lgili firma ad\u0131, proje ad\u0131 veya k\u0131sa ba\u011flam"
+    },
+    "prompt_preview": {
+      "type": "string",
+      "description": "Prompt'un ilk 300 karakteri (debug i\u00e7in)"
+    },
+    "resolved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Hata incelendi/\u00e7\u00f6z\u00fcld\u00fc olarak i\u015faretlendi mi"
+    }
+  },
+  "required": [
+    "function_name",
+    "error_message"
+  ]
+}

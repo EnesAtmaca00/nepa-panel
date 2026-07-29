@@ -1,0 +1,56 @@
+{
+  "name": "HashtagSet",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "company_name": {
+      "type": "string"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "instagram_post",
+        "instagram_reels",
+        "instagram_story",
+        "tiktok",
+        "linkedin",
+        "facebook",
+        "twitter",
+        "all"
+      ],
+      "default": "all"
+    },
+    "hashtags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "description": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "competitor_analysis",
+        "ai_generated"
+      ],
+      "default": "manual"
+    },
+    "use_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "company_id"
+  ]
+}

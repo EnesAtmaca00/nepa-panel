@@ -1,0 +1,58 @@
+{
+  "name": "InvoiceTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "primary_color": {
+      "type": "string",
+      "default": "#0f172a"
+    },
+    "accent_color": {
+      "type": "string",
+      "default": "#3b82f6"
+    },
+    "font_size": {
+      "type": "string",
+      "enum": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "default": "medium"
+    },
+    "show_logo": {
+      "type": "boolean",
+      "default": true
+    },
+    "header_text": {
+      "type": "string"
+    },
+    "footer_text": {
+      "type": "string"
+    },
+    "terms": {
+      "type": "string"
+    },
+    "bank_details": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "header_html": {
+      "type": "string"
+    },
+    "footer_html": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "name": "OutboundLead",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string"
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "manuel",
+        "excel_import",
+        "ai_enriched"
+      ],
+      "default": "manuel"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "cold",
+        "contacted",
+        "responded",
+        "meeting_set",
+        "proposal_sent",
+        "converted",
+        "lost"
+      ],
+      "default": "cold"
+    },
+    "outreach_channel": {
+      "type": "string",
+      "enum": [
+        "email",
+        "whatsapp",
+        "linkedin",
+        "phone",
+        "instagram"
+      ],
+      "default": "email"
+    },
+    "initial_message": {
+      "type": "string"
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "next_followup_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "ai_enriched": {
+      "type": "boolean",
+      "default": false
+    },
+    "enrichment_data": {
+      "type": "object"
+    },
+    "assigned_to": {
+      "type": "string"
+    },
+    "converted_company_id": {
+      "type": "string"
+    },
+    "deleted": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "company_name"
+  ]
+}

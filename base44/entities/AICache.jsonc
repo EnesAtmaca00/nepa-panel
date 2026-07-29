@@ -1,0 +1,36 @@
+{
+  "name": "AICache",
+  "type": "object",
+  "properties": {
+    "cache_key": {
+      "type": "string"
+    },
+    "task_type": {
+      "type": "string"
+    },
+    "prompt_signature": {
+      "type": "string"
+    },
+    "response_text": {
+      "type": "string"
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "hit_count": {
+      "type": "number",
+      "default": 0
+    },
+    "estimated_cost_usd": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "cache_key"
+  ]
+}

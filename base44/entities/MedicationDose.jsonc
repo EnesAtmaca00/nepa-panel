@@ -1,0 +1,61 @@
+{
+  "name": "MedicationDose",
+  "type": "object",
+  "properties": {
+    "medication_id": {
+      "type": "string"
+    },
+    "medication_name": {
+      "type": "string"
+    },
+    "scheduled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "scheduled_time": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reminded",
+        "taken",
+        "missed",
+        "snoozed"
+      ],
+      "default": "pending"
+    },
+    "reminder_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_reminder_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "response_received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "response_text": {
+      "type": "string"
+    },
+    "response_interpretation": {
+      "type": "string"
+    },
+    "taken_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "medication_id",
+    "scheduled_date",
+    "scheduled_time"
+  ]
+}

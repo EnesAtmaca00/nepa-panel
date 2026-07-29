@@ -1,0 +1,81 @@
+{
+  "name": "SpecialDay",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "date_rule_type": {
+      "type": "string",
+      "enum": [
+        "fixed",
+        "dynamic",
+        "religious"
+      ],
+      "default": "fixed"
+    },
+    "fixed_date": {
+      "type": "string",
+      "description": "MM-DD format for fixed dates"
+    },
+    "dynamic_rule": {
+      "type": "string",
+      "description": "\u00f6r: 'May\u0131s 2. Pazar'"
+    },
+    "current_year_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "national_holiday",
+        "religious",
+        "international",
+        "sectoral",
+        "custom"
+      ],
+      "default": "international"
+    },
+    "countries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "relevant_sectors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "description": {
+      "type": "string"
+    },
+    "design_brief_template": {
+      "type": "string"
+    },
+    "emoji": {
+      "type": "string"
+    },
+    "color_theme": {
+      "type": "string"
+    },
+    "reminder_days_before": {
+      "type": "number",
+      "default": 5
+    },
+    "assigned_companies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

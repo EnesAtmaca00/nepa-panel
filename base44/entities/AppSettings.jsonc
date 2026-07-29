@@ -1,0 +1,372 @@
+{
+  "name": "AppSettings",
+  "type": "object",
+  "properties": {
+    "agency_name": {
+      "type": "string",
+      "default": "AjansPro"
+    },
+    "agency_logo_url": {
+      "type": "string"
+    },
+    "agency_tax_number": {
+      "type": "string"
+    },
+    "agency_tax_office": {
+      "type": "string"
+    },
+    "agency_address": {
+      "type": "string"
+    },
+    "agency_city": {
+      "type": "string"
+    },
+    "agency_postal_code": {
+      "type": "string"
+    },
+    "agency_country": {
+      "type": "string",
+      "default": "T\u00fcrkiye"
+    },
+    "agency_phone": {
+      "type": "string"
+    },
+    "agency_email": {
+      "type": "string"
+    },
+    "agency_website": {
+      "type": "string"
+    },
+    "agency_iban": {
+      "type": "string"
+    },
+    "agency_bank_name": {
+      "type": "string"
+    },
+    "default_currency": {
+      "type": "string",
+      "enum": [
+        "TRY",
+        "EUR"
+      ],
+      "default": "TRY"
+    },
+    "default_tax_rate": {
+      "type": "number",
+      "default": 20
+    },
+    "default_tax_mode": {
+      "type": "string",
+      "enum": [
+        "included",
+        "excluded",
+        "none"
+      ],
+      "default": "excluded"
+    },
+    "default_invoice_template_id": {
+      "type": "string"
+    },
+    "invoice_prefix": {
+      "type": "string",
+      "default": "FAT"
+    },
+    "invoice_next_number": {
+      "type": "number",
+      "default": 1
+    },
+    "openai_api_key": {
+      "type": "string"
+    },
+    "anthropic_api_key": {
+      "type": "string"
+    },
+    "gemini_api_key": {
+      "type": "string"
+    },
+    "openrouter_api_key": {
+      "type": "string"
+    },
+    "preferred_ai_provider": {
+      "type": "string",
+      "enum": [
+        "openrouter",
+        "gemini",
+        "openai",
+        "anthropic"
+      ],
+      "default": "gemini"
+    },
+    "default_ai_model": {
+      "type": "string",
+      "description": "T\u00fcm AI i\u015flemlerinde varsay\u0131lan olarak kullan\u0131lacak model ID'si"
+    },
+    "savings_mode": {
+      "type": "boolean",
+      "default": true
+    },
+    "monthly_ai_budget": {
+      "type": "number",
+      "default": 20
+    },
+    "recurring_reminder_time": {
+      "type": "string",
+      "default": "09:00"
+    },
+    "target_reminder_days": {
+      "type": "number",
+      "default": 7
+    },
+    "target_reminder_threshold": {
+      "type": "number",
+      "default": 70
+    },
+    "drive_root_folder_id": {
+      "type": "string"
+    },
+    "drive_root_folder_url": {
+      "type": "string"
+    },
+    "model_routing": {
+      "type": "object",
+      "default": {
+        "caption_translate": "gemini-flash",
+        "hashtag": "gemini-flash",
+        "content_idea": "gemini-flash",
+        "image_prompt": "gemini-flash",
+        "chat_simple": "gemini-flash",
+        "chat_complex": "claude-sonnet",
+        "vision": "gemini-flash",
+        "monthly_report": "gemini-flash"
+      }
+    },
+    "telegram_bot_token": {
+      "type": "string"
+    },
+    "telegram_chat_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "telegram_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "medication_owner_user_id": {
+      "type": "string"
+    },
+    "medication_patient_name": {
+      "type": "string"
+    },
+    "medication_patient_telegram_chat_id": {
+      "type": "string"
+    },
+    "medication_patient_whatsapp_number": {
+      "type": "string"
+    },
+    "medication_whatsapp_apikey": {
+      "type": "string"
+    },
+    "medication_whatsapp_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "medication_snooze_minutes": {
+      "type": "number",
+      "default": 30
+    },
+    "medication_max_reminders": {
+      "type": "number",
+      "default": 3
+    },
+    "medication_timezone": {
+      "type": "string",
+      "enum": [
+        "Europe/Paris",
+        "Europe/Istanbul"
+      ],
+      "default": "Europe/Paris"
+    },
+    "medication_reminder_template": {
+      "type": "string",
+      "default": "\ud83d\udc8a \u0130la\u00e7 saati!\n\n{isim}, {saat} oldu.\n{ilac}"
+    },
+    "medication_followup_template": {
+      "type": "string",
+      "default": "\ud83d\udc8a Hat\u0131rlatma!\n\n{isim}, {ilac} h\u00e2l\u00e2 bekleniyor.\nSaat {saat}'de al\u0131nmas\u0131 gerekiyordu."
+    },
+    "chain_of_thought_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "unsplash_access_key": {
+      "type": "string"
+    },
+    "brave_search_api_key": {
+      "type": "string"
+    },
+    "jina_api_key": {
+      "type": "string"
+    },
+    "pollinations_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "exchange_rate_eur_try": {
+      "type": "number",
+      "default": 38
+    },
+    "exchange_rate_updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "proactive_alerts_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "content_gap_threshold_days": {
+      "type": "number",
+      "default": 14
+    },
+    "enricher_auto_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "page_role_access": {
+      "type": "object",
+      "default": {
+        "/": [
+          "admin",
+          "manager",
+          "editor",
+          "viewer"
+        ],
+        "/faturalar": [
+          "admin",
+          "manager"
+        ],
+        "/ai-studio": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/ayarlar": [
+          "admin",
+          "manager"
+        ],
+        "/icerik-takvimi": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/yayin-takvimi": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/gorevler": [
+          "admin",
+          "manager",
+          "editor",
+          "viewer"
+        ],
+        "/musteriler": [
+          "admin",
+          "manager",
+          "editor",
+          "viewer"
+        ],
+        "/onaylar": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/ozel-gunler": [
+          "admin",
+          "manager"
+        ],
+        "/tekrarlayanlar": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/hizmetler": [
+          "admin",
+          "manager"
+        ],
+        "/hedefler": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/raporlar": [
+          "admin",
+          "manager",
+          "viewer"
+        ],
+        "/inbox": [
+          "admin",
+          "manager"
+        ],
+        "/asistan": [
+          "admin",
+          "manager"
+        ],
+        "/web-projeleri": [
+          "admin",
+          "manager",
+          "editor"
+        ],
+        "/araclar": [
+          "admin",
+          "manager",
+          "editor",
+          "viewer"
+        ],
+        "/saglik": [
+          "admin",
+          "manager"
+        ],
+        "/hesabim": [
+          "admin",
+          "manager",
+          "editor",
+          "viewer"
+        ],
+        "/sozlesmeler": [
+          "admin",
+          "manager"
+        ],
+        "/fatura-sablonlari": [
+          "admin",
+          "manager"
+        ]
+      }
+    }
+  },
+  "required": [],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

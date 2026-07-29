@@ -1,0 +1,40 @@
+{
+  "name": "ServiceCatalog",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "billing_type": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "one_time"
+      ],
+      "default": "monthly"
+    },
+    "default_price_try": {
+      "type": "number",
+      "default": 0
+    },
+    "default_price_eur": {
+      "type": "number",
+      "default": 0
+    },
+    "icon": {
+      "type": "string",
+      "default": "Sparkles"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "billing_type"
+  ]
+}

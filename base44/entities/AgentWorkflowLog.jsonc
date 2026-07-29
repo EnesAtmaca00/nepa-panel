@@ -1,0 +1,105 @@
+{
+  "name": "AgentWorkflowLog",
+  "type": "object",
+  "properties": {
+    "workflow_id": {
+      "type": "string",
+      "description": "Ayn\u0131 i\u015f ak\u0131\u015f\u0131n\u0131n t\u00fcm ad\u0131mlar\u0131n\u0131 gruplayan ID"
+    },
+    "agent_role": {
+      "type": "string",
+      "enum": [
+        "researcher",
+        "drafter",
+        "auditor",
+        "reviewer",
+        "distributor",
+        "router",
+        "escalator"
+      ],
+      "description": "Ajan\u0131n rol\u00fc"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "completed",
+        "waiting_hitl",
+        "failed",
+        "skipped"
+      ],
+      "default": "running"
+    },
+    "related_entity_type": {
+      "type": "string",
+      "description": "\u0130lgili entity tipi (ContentIdea, WebsiteProject, OutboundLead vb.)"
+    },
+    "related_entity_id": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "input_data": {
+      "type": "object",
+      "default": {}
+    },
+    "output_data": {
+      "type": "object",
+      "default": {}
+    },
+    "handoff_data": {
+      "type": "object",
+      "default": {}
+    },
+    "decision": {
+      "type": "string"
+    },
+    "reasoning_log": {
+      "type": "string",
+      "format": "longtext"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "model_used": {
+      "type": "string"
+    },
+    "tokens_used": {
+      "type": "number",
+      "default": 0
+    },
+    "cost_usd": {
+      "type": "number",
+      "default": 0
+    },
+    "hitl_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "hitl_resolved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "hitl_resolved_by": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "workflow_id",
+    "agent_role"
+  ]
+}
