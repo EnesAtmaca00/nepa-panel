@@ -1,0 +1,52 @@
+// Base44 entity adı -> Supabase tablo adı.
+// Shim ve veri aktarım script'i AYNI haritayı kullanır; tek doğruluk kaynağı.
+export const ENTITY_TABLE = {
+  AICache: 'ai_cache',
+  AIChatSession: 'ai_chat_sessions',
+  AIErrorLog: 'ai_error_logs',
+  AIPromptHistory: 'ai_prompt_history',
+  AgentWorkflowLog: 'agent_workflow_logs',
+  AppSettings: 'app_settings',
+  ClientApproval: 'client_approvals',
+  CodeRequest: 'code_requests',
+  Company: 'companies',
+  CompetitorReport: 'competitor_reports',
+  ContentIdea: 'content_ideas',
+  Contract: 'contracts',
+  EmailThread: 'email_threads',
+  Expense: 'expenses',
+  FileItem: 'file_items',
+  FirmaBaglamHafizasi: 'firma_baglam_hafizasi',
+  HashtagSet: 'hashtag_sets',
+  IdeaGenerationLog: 'idea_generation_logs',
+  ImagePromptDraft: 'image_prompt_drafts',
+  Invoice: 'invoices',
+  InvoiceTemplate: 'invoice_templates',
+  MediaAsset: 'media_assets',
+  Medication: 'medications',
+  MedicationConversation: 'medication_conversations',
+  MedicationDose: 'medication_doses',
+  MonthlyReport: 'monthly_reports',
+  Notification: 'notifications',
+  OutboundLead: 'outbound_leads',
+  Presentation: 'presentations',
+  PublishSchedule: 'publish_schedules',
+  RecurringContentInstance: 'recurring_content_instances',
+  RecurringContentTemplate: 'recurring_content_templates',
+  ResourceTool: 'resource_tools',
+  SektorAnalizi: 'sektor_analizleri',
+  ServiceCatalog: 'service_catalog',
+  SocialMediaAccount: 'social_media_accounts',
+  SpecialDay: 'special_days',
+  StyleMemory: 'style_memories',
+  TargetTracking: 'target_tracking',
+  Task: 'tasks',
+  User: 'app_users',
+  WebsiteProject: 'website_projects',
+};
+
+// Base44'te SocialMediaAccount.access_token düz metindi.
+// Supabase'de token'lar Vault'ta; tablo sadece referans tutuyor.
+export const RENAMED_FIELDS = {
+  social_media_accounts: { access_token: 'access_token_ref', refresh_token: 'refresh_token_ref' },
+};

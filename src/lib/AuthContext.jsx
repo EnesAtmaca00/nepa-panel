@@ -1,7 +1,17 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
-import { appParams } from '@/lib/app-params';
-import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
+// ============================================================
+// AuthContext — Supabase Auth
+//
+// Base44 sürümü uygulamanın kimliğini doğrulamak için Base44'ün kendi
+// /api/apps/public uç noktasını çağırıyor, oturumu URL'den gelen bir
+// token'la takip ediyordu. İkisi de artık yok.
+//
+// Yüzey (useAuth ile dönen alanlar) BİLEREK aynı tutuldu — RoleGuard,
+// PermissionGate, Sidebar, Layout ve sayfalar bu alanlara güveniyor.
+// `appPublicSettings` da korunuyor; Base44'e özgüydü, artık sabit bir
+// nesne dönüyor ki ona bakan kod bozulmasın.
+// ============================================================
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import { base44, supabase } from '@/api/base44Client';
 
 const AuthContext = createContext();
 
@@ -9,133 +19,84 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
-  const [isLoadingPublicSettings, setIsLoadingPublicSettings] = useState(true);
   const [authError, setAuthError] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const [appPublicSettings, setAppPublicSettings] = useState(null); // Contains only { id, public_settings }
 
-  useEffect(() => {
-    checkAppState();
+  // Base44'te uygulamanın herkese açık ayarlarıydı. Supabase'de karşılığı yok;
+  // ona bakan kodu bozmamak için sabit tutuyoruz.
+  const appPublicSettings = { id: 'nepa-panel', public_settings: {} };
+  const isLoadingPublicSettings = false;
+
+  /** Oturumdaki kullanıcıyı app_users profiliyle birleştirip yükler. */
+  const checkUserAuth = useCallback(async () => {
+    setIsLoadingAuth(true);
+    setAuthError(null);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setUser(null);
+        setIsAuthenticated(false);
+        return;
+      }
+      const me = await base44.auth.me();
+
+      // Devre dışı bırakılmış hesap oturum açabilir ama panele girmemeli.
+      if (me.active === false) {
+        await supabase.auth.signOut();
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthError({ type: 'account_disabled', message: 'Hesabınız devre dışı bırakılmış.' });
+        return;
+      }
+
+      setUser(me);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Oturum kontrolü başarısız:', error);
+      setUser(null);
+      setIsAuthenticated(false);
+      setAuthError({ type: 'auth_required', message: error.message || 'Oturum doğrulanamadı' });
+    } finally {
+      setIsLoadingAuth(false);
+      setAuthChecked(true);
+    }
   }, []);
 
-  const checkAppState = async () => {
-    try {
-      setIsLoadingPublicSettings(true);
-      setAuthError(null);
-      
-      // First, check app public settings (with token if available)
-      // This will tell us if auth is required, user not registered, etc.
-      const appClient = createAxiosClient({
-        baseURL: `/api/apps/public`,
-        headers: {
-          'X-App-Id': appParams.appId
-        },
-        token: appParams.token, // Include token if available
-        interceptResponses: true
-      });
-      
-      try {
-        const publicSettings = await appClient.get(`/prod/public-settings/by-id/${appParams.appId}`);
-        setAppPublicSettings(publicSettings);
-        
-        // If we got the app public settings successfully, check if user is authenticated
-        if (appParams.token) {
-          await checkUserAuth();
-        } else {
-          setIsLoadingAuth(false);
-          setIsAuthenticated(false);
-          setAuthChecked(true);
-        }
-        setIsLoadingPublicSettings(false);
-      } catch (appError) {
-        console.error('App state check failed:', appError);
-        
-        // Handle app-level errors
-        if (appError.status === 403 && appError.data?.extra_data?.reason) {
-          const reason = appError.data.extra_data.reason;
-          if (reason === 'auth_required') {
-            setAuthError({
-              type: 'auth_required',
-              message: 'Authentication required'
-            });
-          } else if (reason === 'user_not_registered') {
-            setAuthError({
-              type: 'user_not_registered',
-              message: 'User not registered for this app'
-            });
-          } else {
-            setAuthError({
-              type: reason,
-              message: appError.message
-            });
-          }
-        } else {
-          setAuthError({
-            type: 'unknown',
-            message: appError.message || 'Failed to load app'
-          });
-        }
-        setIsLoadingPublicSettings(false);
+  useEffect(() => {
+    checkUserAuth();
+
+    // Oturum yenilenince / çıkış yapılınca durumu güncel tut.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthChecked(true);
         setIsLoadingAuth(false);
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        checkUserAuth();
       }
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      setAuthError({
-        type: 'unknown',
-        message: error.message || 'An unexpected error occurred'
-      });
-      setIsLoadingPublicSettings(false);
-      setIsLoadingAuth(false);
-    }
-  };
+    });
+    return () => subscription?.unsubscribe();
+  }, [checkUserAuth]);
 
-  const checkUserAuth = async () => {
-    try {
-      // Now check if the user is authenticated
-      setIsLoadingAuth(true);
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      setIsAuthenticated(true);
-      setIsLoadingAuth(false);
-      setAuthChecked(true);
-    } catch (error) {
-      console.error('User auth check failed:', error);
-      setIsLoadingAuth(false);
-      setIsAuthenticated(false);
-      setAuthChecked(true);
-      
-      // If user auth fails, it might be an expired token
-      if (error.status === 401 || error.status === 403) {
-        setAuthError({
-          type: 'auth_required',
-          message: 'Authentication required'
-        });
-      }
-    }
-  };
-
-  const logout = (shouldRedirect = true) => {
+  const logout = async (shouldRedirect = true) => {
     setUser(null);
     setIsAuthenticated(false);
-    
-    if (shouldRedirect) {
-      // Use the SDK's logout method which handles token cleanup and redirect
-      base44.auth.logout(window.location.href);
-    } else {
-      // Just remove the token without redirect
-      base44.auth.logout();
-    }
+    await supabase.auth.signOut();
+    if (shouldRedirect) window.location.href = '/giris';
   };
 
   const navigateToLogin = () => {
-    // Use the SDK's redirectToLogin method
-    base44.auth.redirectToLogin(window.location.href);
+    base44.auth.redirectToLogin(window.location.pathname + window.location.search);
   };
 
+  // Base44 sürümünde vardı, bazı yerler çağırıyor olabilir.
+  const checkAppState = checkUserAuth;
+
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated, 
+    <AuthContext.Provider value={{
+      user,
+      isAuthenticated,
       isLoadingAuth,
       isLoadingPublicSettings,
       authError,
@@ -144,7 +105,7 @@ export const AuthProvider = ({ children }) => {
       logout,
       navigateToLogin,
       checkUserAuth,
-      checkAppState
+      checkAppState,
     }}>
       {children}
     </AuthContext.Provider>

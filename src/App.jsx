@@ -27,6 +27,7 @@ import WebProjects from '@/pages/WebProjects.jsx';
 import Reports from '@/pages/Reports';
 import Notifications from '@/pages/Notifications';
 import PublicApproval from '@/pages/PublicApproval';
+import Login from '@/pages/Login';
 import QuickPlanning from '@/pages/QuickPlanning';
 import AgentConnect from '@/pages/AgentConnect';
 import Inbox from '@/pages/Inbox';
@@ -53,7 +54,7 @@ const AME = ["admin", "manager", "editor"];
 const AMEV = ["admin", "manager", "editor", "viewer"];
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authError, isAuthenticated } = useAuth();
 
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
@@ -63,18 +64,26 @@ const AuthenticatedApp = () => {
     );
   }
 
-  if (authError) {
-    if (authError.type === 'user_not_registered') return <UserNotRegisteredError />;
-    if (authError.type === 'auth_required') {
-      navigateToLogin();
-      return null;
-    }
+  if (authError?.type === 'user_not_registered') return <UserNotRegisteredError />;
+
+  // Oturum yoksa giriş ekranını GÖSTER, yönlendirme yapma.
+  // Base44 sürümü burada window.location ile /giris'e atıyordu; o sayfa
+  // olmadığı için sonsuz döngüye giriyordu. Müşteri onay linki oturum
+  // gerektirmediği için açık kalmalı.
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/onay/:token" element={<PublicApproval />} />
+        <Route path="*" element={<Login />} />
+      </Routes>
+    );
   }
 
   return (
     <Routes>
       {/* Public route */}
       <Route path="/onay/:token" element={<PublicApproval />} />
+      <Route path="/giris" element={<Login />} />
 
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
