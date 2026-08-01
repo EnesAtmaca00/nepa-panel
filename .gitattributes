@@ -1,0 +1,14 @@
+# Satır sonu uyarılarını sustur. Depoda LF, Windows'ta çalışma kopyasında
+# git'in kendi dönüşümü. Bu dosya olmadan her push yüzlerce
+# "LF will be replaced by CRLF" uyarısı basıyordu.
+* text=auto eol=lf
+
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+*.png binary
+*.ico binary
+*.avif binary
+*.jpg binary
+*.webp binary
+*.pdf binary
