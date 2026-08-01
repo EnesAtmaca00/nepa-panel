@@ -33,7 +33,6 @@ export default function Settings() {
     recurring_reminder_time: "09:00",
     target_reminder_days: 7,
     target_reminder_threshold: 70,
-    telegram_bot_token: "",
     telegram_chat_ids: [],
     telegram_enabled: false,
   });
@@ -57,15 +56,51 @@ export default function Settings() {
     }
   }, [settings?.id, initialized]);
 
+  // Veritabanına gönderilmeyecek alanlar. id ve zaman damgaları sunucunun
+  // işi; singleton da öyle.
+  const GONDERILMEZ = new Set(["id", "created_date", "updated_date", "singleton"]);
+
+  /**
+   * Payload'u tabloda GERÇEKTEN var olan kolonlara indirger.
+   *
+   * Neden gerekli: state'te tabloda karşılığı olmayan bir alan kalırsa
+   * (ör. kasaya taşınmış telegram_bot_token) PostgREST "böyle bir kolon
+   * yok" deyip TÜM güncellemeyi reddediyor — tek bir fazla alan yüzünden
+   * hiçbir ayar kaydolmuyordu.
+   *
+   * settings satırı veritabanından geldiği için anahtarları gerçek kolon
+   * listesidir; başka bir yerde kolon listesi tutmaya gerek yok, şema
+   * değişince kendiliğinden güncel kalıyor.
+   */
+  const temizle = (payload) => {
+    const kolonlar = settings ? Object.keys(settings) : null;
+    const out = {};
+    for (const [k, v] of Object.entries(payload)) {
+      if (GONDERILMEZ.has(k)) continue;
+      if (kolonlar && !kolonlar.includes(k)) continue;
+      out[k] = v;
+    }
+    return out;
+  };
+
   const save = useMutation({
     mutationFn: async (payload) => {
-      if (settings?.id) return base44.entities.AppSettings.update(settings.id, payload);
-      return base44.entities.AppSettings.create(payload);
+      const temiz = temizle(payload);
+      if (settings?.id) return base44.entities.AppSettings.update(settings.id, temiz);
+      return base44.entities.AppSettings.create(temiz);
     },
-    onSuccess: () => {
-      // Sadece cache'i sil ama setData'yı tetikleme
-      queryClient.setQueryData(["app-settings"], (old) => old);
+    onSuccess: (kaydedilen) => {
+      // Yazılan satırı cache'e koy ki sayfa yenilenmeden de tutarlı kalsın.
+      // Eskiden burada (old) => old vardı: hiçbir şey yapmıyordu.
+      if (kaydedilen) queryClient.setQueryData(["app-settings"], [kaydedilen]);
       toast.success("Ayarlar kaydedildi");
+    },
+    // onError YOKTU — kaydetme başarısız olduğunda ekranda hiçbir iz
+    // kalmıyordu. Kullanıcı kaydettiğini sanıp yenileyince verinin
+    // gittiğini görüyordu.
+    onError: (e) => {
+      toast.error("Kaydedilemedi: " + (e?.message || "bilinmeyen hata"));
+      console.error("[Ayarlar] kaydetme hatası:", e);
     },
   });
 
@@ -393,18 +428,17 @@ export default function Settings() {
                 <Switch checked={data.telegram_enabled} onCheckedChange={(v) => set("telegram_enabled", v)} />
               </div>
 
-              <div>
-                <Label className="mb-1.5">Bot Token</Label>
-                <Input
-                  type="password"
-                  value={data.telegram_bot_token || ""}
-                  onChange={(e) => set("telegram_bot_token", e.target.value)}
-                  placeholder="7234567890:AAH..."
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Telegram'da @BotFather'a /newbot yaz → token al. Sonra bota /start yaz, <code className="bg-muted px-1 rounded">api.telegram.org/bot&#123;TOKEN&#125;/getUpdates</code> adresinden chat_id'ni bul.
-                </p>
-              </div>
+              {/* Bot token artık app_settings'te DEĞİL, Vault'ta. Eskiden düz
+                  metin olarak tabloda duruyordu — sızıntının sebebi buydu. */}
+              <ApiKeyField
+                label="Bot Token"
+                provider="telegram"
+                saved={keyStatus.telegram?.has_key}
+                savedAt={keyStatus.telegram?.updated_at}
+                onChanged={refreshKeys}
+                placeholder="7234567890:AAH..."
+                hint="Telegram'da @BotFather'a /newbot yaz → token al. Sonra bota /start yaz, api.telegram.org/bot{TOKEN}/getUpdates adresinden chat_id'ni bul."
+              />
 
               <div>
                 <Label className="mb-1.5">Chat ID'ler</Label>
@@ -438,7 +472,7 @@ export default function Settings() {
                 variant="outline"
                 size="sm"
                 onClick={testTelegram}
-                disabled={testingTelegram || !data.telegram_bot_token}
+                disabled={testingTelegram || !keyStatus.telegram?.has_key}
               >
                 <Send className="w-4 h-4 mr-2" />
                 {testingTelegram ? "Gönderiliyor..." : "Test Mesajı Gönder"}
