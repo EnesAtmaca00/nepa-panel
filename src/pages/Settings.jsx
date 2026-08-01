@@ -17,6 +17,7 @@ import CostTab from "@/components/settings/CostTab";
 import PageAccessTab from "@/components/settings/PageAccessTab";
 import IntelligenceTab from "@/components/settings/IntelligenceTab";
 import AIModelTab from "@/components/settings/AIModelTab";
+import GoogleBaglanti from "@/components/settings/GoogleBaglanti";
 
 export default function Settings() {
   const queryClient = useQueryClient();
@@ -360,6 +361,9 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Google Drive + Gmail — Base44'te platformdaydı, artık burada. */}
+          <GoogleBaglanti />
         </TabsContent>
 
         {/* AI MODEL SEÇİMİ */}
