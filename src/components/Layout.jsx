@@ -43,9 +43,14 @@ export default function Layout() {
         />
       )}
 
-      {/* Sidebar — masaüstünde sticky, mobilde drawer */}
+      {/* Sidebar — masaüstünde sticky, mobilde drawer
+          Eskiden h-screen + main'de overflow-y-auto vardı: sayfanın kendisi
+          hiç kaymıyor, sadece içerik kutusu kendi içinde kayıyordu. Bu yüzden
+          kenar çubuğu sayfadan bağımsız duruyordu.
+          Şimdi belge kayıyor, çubuk yapışık kalıyor; menü ekrandan uzunsa
+          üzerindeyken kendi içinde kayıyor. */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 h-screen w-64 z-50 transform transition-transform duration-200 ease-expo ${
+        className={`fixed lg:sticky top-0 left-0 h-screen lg:h-auto lg:max-h-screen w-64 z-50 shrink-0 overflow-y-auto overscroll-contain scrollbar-thin transform transition-transform duration-200 ease-expo ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
@@ -53,14 +58,14 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0">
         <TopBar
           darkMode={darkMode}
           setDarkMode={setDarkMode}
           onMenuClick={() => setSidebarOpen(v => !v)}
         />
-        {/* pb-20 lg:pb-6 = mobilde bottom nav için boşluk */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
+        {/* pb-24 lg:pb-8 = mobilde bottom nav için boşluk */}
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
           <div className="max-w-[1600px] mx-auto w-full">
             <Outlet />
           </div>

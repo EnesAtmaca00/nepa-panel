@@ -6,8 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Brain, Zap, AlertTriangle } from "lucide-react";
 import ApiKeyField from "./ApiKeyField";
+import useProviderKeys from "./useProviderKeys";
 
 export default function IntelligenceTab({ data, set }) {
+  // Anahtarlar artık app_settings'te değil, Supabase Vault'ta.
+  // Burada sadece "kayıtlı mı" bilgisini okuyoruz.
+  const { status, refresh } = useProviderKeys();
   return (
     <div className="space-y-4">
       <Card>
@@ -43,24 +47,27 @@ export default function IntelligenceTab({ data, set }) {
           <ApiKeyField
             label="Unsplash Access Key"
             provider="unsplash"
-            value={data.unsplash_access_key}
-            onChange={(v) => set("unsplash_access_key", v)}
+            saved={status.unsplash?.has_key}
+            savedAt={status.unsplash?.updated_at}
+            onChanged={refresh}
             placeholder="Sunum görselleri için"
             hint="unsplash.com/developers — boş bırakırsan source URL kullanılır."
           />
           <ApiKeyField
             label="Brave Search API Key"
             provider="brave"
-            value={data.brave_search_api_key}
-            onChange={(v) => set("brave_search_api_key", v)}
+            saved={status.brave?.has_key}
+            savedAt={status.brave?.updated_at}
+            onChanged={refresh}
             placeholder="Araştırma için"
             hint="brave.com/search/api"
           />
           <ApiKeyField
             label="Jina API Key (opsiyonel)"
             provider="jina"
-            value={data.jina_api_key}
-            onChange={(v) => set("jina_api_key", v)}
+            saved={status.jina?.has_key}
+            savedAt={status.jina?.updated_at}
+            onChanged={refresh}
             placeholder="Web içerik okuma için"
             hint="jina.ai — keysiz de çalışır."
           />

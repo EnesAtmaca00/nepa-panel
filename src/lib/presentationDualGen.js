@@ -1,3 +1,4 @@
+import { base44 } from "@/api/base44Client";
 // Çift versiyon üretici: Müşteri sunumu + Ajans iç notları
 // Tek AI çağrısında iki bağlamsal çıktı.
 import { arastirmaOzetiMetni } from "@/lib/presentationResearch";
@@ -59,8 +60,30 @@ function buildMinFallback(ctx, settings) {
   };
 }
 
+/**
+ * OpenRouter'ı TARAYICIDAN çağırmıyoruz.
+ *
+ * Eski kod API anahtarını app_settings'ten okuyup fetch header'ına koyuyordu;
+ * bu anahtarın tarayıcıya inmesi demekti ve sızıntının kaynağı tam olarak
+ * buydu. Artık istek aiInvoke Edge Function'ına gidiyor, anahtar sunucuda
+ * kalıyor (Supabase Vault).
+ */
+async function callAI({ system, user, model, maxTokens, temperature, taskType }) {
+  const res = await base44.functions.invoke("aiInvoke", {
+    task_type: taskType,
+    system_prompt: system,
+    prompt: user,
+    model_override: model,
+    max_tokens: maxTokens,
+    temperature,
+  });
+  const d = res?.data || res || {};
+  if (d.error) throw new Error(d.error);
+  return d.text ?? d.content ?? "";
+}
+
 // İkinci şans çağrısı — basit, sıkı JSON prompt.
-async function retryDualGen(ctx, settings, apiKey, model) {
+async function retryDualGen(ctx, settings, model) {
   const firma = ctx?.firma_adi || "Müşteri";
   const sektor = ctx?.sektor || "Genel";
   const hizmetler = (ctx?.tespit_edilen_hizmetler || ["Dijital pazarlama"]).join(", ");
@@ -77,22 +100,15 @@ SADECE BU JSON FORMATINI DÖNDÜR:
 {"musteri_versiyonu":{"sunum_basligi":"${firma} için Dijital Çözümler","kisa_ozet":"Profesyonel dijital dönüşüm","slides":[{"no":1,"tip":"kapak","baslik":"Kapak","icerik":{"ana_baslik":"${ajans}","alt_baslik":"${firma} için Dijital Çözümler","tarih":"${tarih}"}},{"no":2,"tip":"analiz","baslik":"Neden Dijital?","icerik":{"noktalar":["Dijital dönüşüm fırsatı","Rakiplerden öne geçme","Müşteri tabanını büyütme"],"vurgu":"Şimdi doğru zaman"}},{"no":3,"tip":"hizmetler","baslik":"Hizmetlerimiz","icerik":{"hizmetler":[{"ad":"Hizmet 1","aciklama":"Açıklama","sure":"1-2 ay"}]}},{"no":4,"tip":"takvim","baslik":"Proje Takvimi","icerik":{"aylar":[{"ay":"1. Ay","baslik":"Başlangıç","icerikler":["Analiz","Planlama"]},{"ay":"2. Ay","baslik":"Üretim","icerikler":["Tasarım","Geliştirme"]},{"ay":"3. Ay","baslik":"Lansman","icerikler":["Yayın","Takip"]}]}},{"no":5,"tip":"farklilasma","baslik":"Neden Biz?","icerik":{"noktalar":[{"baslik":"Deneyim","aciklama":"Sektör uzmanlığı"},{"baslik":"Teknoloji","aciklama":"Modern araçlar"},{"baslik":"Sonuç","aciklama":"Ölçülebilir başarı"}]}},{"no":6,"tip":"cta","baslik":"Başlayalım","icerik":{"baslik":"Hemen Başlayalım","adimlar":["Bu hafta görüşme","Önümüzdeki hafta plan","İlk sonuçlar 30 günde"],"iletisim":"${iletisim}"}}],"duz_metin":"Merhaba, ${ajans} olarak ${firma} için dijital çözümler sunuyoruz."},"ic_versiyon":{"ozet":"İç notlar","muzakere_noktalari":["Bütçe esnekliği"],"riskler":["Karar süreci uzun olabilir"],"firsatlar":["Referans müşteri olabilir"]}}`;
 
   try {
-    const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model,
-        max_tokens: 1800,
-        temperature: 0.4,
-        messages: [
-          { role: "system", content: "Sen JSON üreten bir sistemsin. SADECE geçerli JSON döndür. Markdown yok, açıklama yok." },
-          { role: "user", content: userMsg },
-        ],
-      }),
+    const text = await callAI({
+      system: "Sen JSON üreten bir sistemsin. SADECE geçerli JSON döndür. Markdown yok, açıklama yok.",
+      user: userMsg,
+      model,
+      maxTokens: 1800,
+      temperature: 0.4,
+      taskType: "presentation",
     });
-    if (!r.ok) return null;
-    const d = await r.json();
-    return parseJSON(d?.choices?.[0]?.message?.content || "");
+    return parseJSON(text);
   } catch {
     return null;
   }
@@ -112,9 +128,6 @@ export async function generateDualPresentation({
   systemPrompt,
   settings,
 }) {
-  const apiKey = settings?.openrouter_api_key;
-  if (!apiKey) throw new Error("OpenRouter API key tanımlı değil (Ayarlar → AI).");
-
   const model = settings?.model_routing?.presentation || "anthropic/claude-sonnet-4";
   const arastirmaMetni = arastirmaOzetiMetni(arastirma);
 
@@ -180,41 +193,14 @@ SADECE şu JSON'u döndür (markdown yok):
   const metinUzunlugu = inputText.length;
   const maxTokens = metinUzunlugu < 500 ? 2400 : metinUzunlugu < 1500 ? 3200 : 4000;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 90000);
-
-  let response;
-  try {
-    response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://nepa-panel.base44.app",
-        "X-Title": "Ne-Pa Panel — Sunumlar",
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: maxTokens,
-        temperature: 0.75,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-    });
-  } finally {
-    clearTimeout(timeoutId);
-  }
-
-  if (!response.ok) {
-    const err = await response.text().catch(() => "");
-    throw new Error(`AI hatası ${response.status}: ${err.substring(0, 200)}`);
-  }
-
-  const data = await response.json();
-  const rawText = data?.choices?.[0]?.message?.content || "";
+  const rawText = await callAI({
+    system: systemPrompt,
+    user: userPrompt,
+    model,
+    maxTokens,
+    temperature: 0.75,
+    taskType: "presentation",
+  });
   let parsed = parseJSON(rawText);
 
   // Bazen model {slides:[...]} formatında dönüyor (eski format) — sarmal
@@ -225,7 +211,7 @@ SADECE şu JSON'u döndür (markdown yok):
   // İkinci şans çağrısı — daha basit prompt'la
   if (!parsed?.musteri_versiyonu?.slides?.length) {
     console.warn("[Drafter] İlk parse başarısız, retry deneniyor...");
-    const retryParsed = await retryDualGen(ctx, settings, apiKey, model);
+    const retryParsed = await retryDualGen(ctx, settings, model);
     if (retryParsed?.musteri_versiyonu?.slides?.length) {
       parsed = retryParsed;
     }

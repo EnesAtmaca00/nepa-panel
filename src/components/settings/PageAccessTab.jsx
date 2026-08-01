@@ -4,31 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShieldCheck } from "lucide-react";
-
-const PAGES = [
-  { path: "/", label: "Dashboard" },
-  { path: "/musteriler", label: "Müşteriler" },
-  { path: "/icerik-takvimi", label: "İçerik Takvimi" },
-  { path: "/yayin-takvimi", label: "Yayın Takvimi" },
-  { path: "/anlik-planlama", label: "Anlık Planlama" },
-  { path: "/gorevler", label: "Görevler" },
-  { path: "/ai-studio", label: "AI Stüdyosu" },
-  { path: "/araclar", label: "Araç Kutusu" },
-  { path: "/onaylar", label: "Onay Bekleyenler" },
-  { path: "/ozel-gunler", label: "Özel Günler" },
-  { path: "/tekrarlayanlar", label: "Tekrarlayanlar" },
-  { path: "/faturalar", label: "Faturalar" },
-  { path: "/sozlesmeler", label: "Sözleşmeler" },
-  { path: "/hizmetler", label: "Hizmet Kataloğu" },
-  { path: "/hedefler", label: "Hedefler" },
-  { path: "/raporlar", label: "Raporlar" },
-  { path: "/inbox", label: "AI Inbox" },
-  { path: "/asistan", label: "WhatsApp & Telegram" },
-  { path: "/web-projeleri", label: "Web Projeleri" },
-  { path: "/saglik", label: "Sağlık" },
-  { path: "/ayarlar", label: "Ayarlar" },
-  { path: "/hesabim", label: "Hesabım" },
-];
+import { PAGES, DEFAULT_ACCESS, ROLES as ROLE_KEYS } from "@/lib/pageAccess";
 
 const ROLES = [
   { key: "admin", label: "Admin" },
@@ -37,33 +13,8 @@ const ROLES = [
   { key: "viewer", label: "Görüntüleyici" },
 ];
 
-const DEFAULT_ACCESS = {
-  "/": ["admin", "manager", "editor", "viewer"],
-  "/anlik-planlama": ["admin", "manager", "editor"],
-  "/icerik-takvimi": ["admin", "manager", "editor"],
-  "/yayin-takvimi": ["admin", "manager", "editor"],
-  "/gorevler": ["admin", "manager", "editor", "viewer"],
-  "/ai-studio": ["admin", "manager", "editor"],
-  "/araclar": ["admin", "manager", "editor", "viewer"],
-  "/musteriler": ["admin", "manager", "editor", "viewer"],
-  "/onaylar": ["admin", "manager", "editor"],
-  "/ozel-gunler": ["admin", "manager"],
-  "/tekrarlayanlar": ["admin", "manager", "editor"],
-  "/faturalar": ["admin", "manager"],
-  "/sozlesmeler": ["admin", "manager"],
-  "/hizmetler": ["admin", "manager"],
-  "/hedefler": ["admin", "manager", "editor"],
-  "/raporlar": ["admin", "manager", "viewer"],
-  "/inbox": ["admin", "manager"],
-  "/asistan": ["admin", "manager"],
-  "/web-projeleri": ["admin", "manager", "editor"],
-  "/saglik": ["admin", "manager"],
-  "/ayarlar": ["admin", "manager"],
-  "/hesabim": ["admin", "manager", "editor", "viewer"],
-};
-
 export default function PageAccessTab({ settings, onUpdate }) {
-  const access = settings?.page_role_access || DEFAULT_ACCESS;
+  const access = { ...DEFAULT_ACCESS, ...(settings?.page_role_access || {}) };
 
   const toggle = (path, role) => {
     if (role === "admin") return; // admin always stays

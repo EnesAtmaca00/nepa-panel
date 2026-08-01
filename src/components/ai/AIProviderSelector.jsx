@@ -1,28 +1,34 @@
 import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { supabase } from "@/api/base44Client";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Cpu } from "lucide-react";
 
 export default function AIProviderSelector({ value, onChange, compact = false, label = "Promptu Üreten AI" }) {
-  const { data: settings } = useQuery({
-    queryKey: ["app-settings"],
+  // Anahtarlar app_settings'te DEĞİL, Supabase Vault'ta. Buradan sadece
+  // hangi sağlayıcının anahtarı var bilgisini alıyoruz — değerini değil.
+  const { data: keyStatus } = useQuery({
+    queryKey: ["provider-key-status"],
+    staleTime: 60_000,
     queryFn: async () => {
-      const list = await base44.entities.AppSettings.list();
-      return list[0] || {};
+      const { data, error } = await supabase.rpc("provider_key_status");
+      if (error) throw new Error(error.message);
+      const map = {};
+      for (const row of data ?? []) map[row.provider] = row.has_key;
+      return map;
     },
   });
 
   const providers = useMemo(() => {
-    if (!settings) return [];
     const list = [{ value: "auto", label: "🤖 Otomatik (Önerilen)" }];
-    if (settings.gemini_api_key) list.push({ value: "gemini", label: "Gemini (Google)" });
-    if (settings.openai_api_key) list.push({ value: "openai", label: "OpenAI (GPT)" });
-    if (settings.anthropic_api_key) list.push({ value: "anthropic", label: "Anthropic (Claude)" });
-    if (settings.openrouter_api_key) list.push({ value: "openrouter", label: "OpenRouter" });
+    if (!keyStatus) return list;
+    if (keyStatus.gemini) list.push({ value: "gemini", label: "Gemini (Google)" });
+    if (keyStatus.openai) list.push({ value: "openai", label: "OpenAI (GPT)" });
+    if (keyStatus.anthropic) list.push({ value: "anthropic", label: "Anthropic (Claude)" });
+    if (keyStatus.openrouter) list.push({ value: "openrouter", label: "OpenRouter" });
     return list;
-  }, [settings]);
+  }, [keyStatus]);
 
   if (compact) {
     return (

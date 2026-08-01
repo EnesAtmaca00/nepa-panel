@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Save, Key, Check, FolderOpen, Sparkles, DollarSign, Send, Plus, Trash2, Users, ShieldCheck, Loader2, Brain, Cpu } from "lucide-react";
 import { toast } from "sonner";
 import ApiKeyField from "@/components/settings/ApiKeyField";
+import useProviderKeys from "@/components/settings/useProviderKeys";
 import TeamTab from "@/components/settings/TeamTab";
 import CostTab from "@/components/settings/CostTab";
 import PageAccessTab from "@/components/settings/PageAccessTab";
@@ -19,6 +20,9 @@ import AIModelTab from "@/components/settings/AIModelTab";
 
 export default function Settings() {
   const queryClient = useQueryClient();
+  // API anahtarları artık app_settings'te değil, Supabase Vault'ta.
+  // Buradan sadece "kayıtlı mı" bilgisini okuyoruz; değerleri asla gelmiyor.
+  const { status: keyStatus, refresh: refreshKeys } = useProviderKeys();
   const [data, setData] = useState({
     agency_name: "AjansPro",
     default_currency: "TRY",
@@ -28,10 +32,6 @@ export default function Settings() {
     recurring_reminder_time: "09:00",
     target_reminder_days: 7,
     target_reminder_threshold: 70,
-    openai_api_key: "",
-    anthropic_api_key: "",
-    gemini_api_key: "",
-    openrouter_api_key: "",
     telegram_bot_token: "",
     telegram_chat_ids: [],
     telegram_enabled: false,
@@ -332,10 +332,15 @@ export default function Settings() {
                   </SelectContent>
                 </Select>
               </div>
-              <ApiKeyField label="OpenRouter API Key" provider="openrouter" value={data.openrouter_api_key} onChange={(v) => set("openrouter_api_key", v)} placeholder="sk-or-..." hint="openrouter.ai/keys'den oluşturabilirsin." />
-              <ApiKeyField label="Google Gemini API Key" provider="gemini" value={data.gemini_api_key} onChange={(v) => set("gemini_api_key", v)} placeholder="AIza..." hint="aistudio.google.com'dan ücretsiz al." />
-              <ApiKeyField label="OpenAI API Key" provider="openai" value={data.openai_api_key} onChange={(v) => set("openai_api_key", v)} placeholder="sk-..." />
-              <ApiKeyField label="Anthropic API Key" provider="anthropic" value={data.anthropic_api_key} onChange={(v) => set("anthropic_api_key", v)} placeholder="sk-ant-..." />
+              <p className="text-xs text-muted-foreground -mt-1">
+                Anahtarlar şifreli olarak saklanır ve kaydedildikten sonra bir daha
+                gösterilmez. Kaydetmeden önce sağlayıcıya sorulup doğrulanır —
+                geçersiz anahtar kaydedilmez.
+              </p>
+              <ApiKeyField label="OpenRouter API Key" provider="openrouter" saved={keyStatus.openrouter?.has_key} savedAt={keyStatus.openrouter?.updated_at} onChanged={refreshKeys} placeholder="sk-or-..." hint="openrouter.ai/keys'den oluşturabilirsin." />
+              <ApiKeyField label="Google Gemini API Key" provider="gemini" saved={keyStatus.gemini?.has_key} savedAt={keyStatus.gemini?.updated_at} onChanged={refreshKeys} placeholder="AIza..." hint="aistudio.google.com'dan ücretsiz al." />
+              <ApiKeyField label="OpenAI API Key" provider="openai" saved={keyStatus.openai?.has_key} savedAt={keyStatus.openai?.updated_at} onChanged={refreshKeys} placeholder="sk-..." />
+              <ApiKeyField label="Anthropic API Key" provider="anthropic" saved={keyStatus.anthropic?.has_key} savedAt={keyStatus.anthropic?.updated_at} onChanged={refreshKeys} placeholder="sk-ant-..." />
             </CardContent>
           </Card>
 

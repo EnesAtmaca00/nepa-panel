@@ -9,6 +9,7 @@ import {
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { getAgencyRole } from "@/lib/permissions";
+import { canAccess } from "@/lib/pageAccess";
 import AgencyLogo from "@/components/AgencyLogo";
 
 const AM = ["admin", "manager"];
@@ -120,7 +121,7 @@ export default function Sidebar({ onNavigate }) {
   const showMedication = user?.id && AM.includes(currentRole);
 
   return (
-    <div className="h-full bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">
+    <div className="h-full lg:min-h-screen bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">
       {/* Logo */}
       <div className="px-5 py-4 border-b border-sidebar-border flex items-center gap-2.5">
         <AgencyLogo size="sm" />
@@ -145,9 +146,18 @@ export default function Sidebar({ onNavigate }) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin py-3 px-2">
+      {/* Kaydırmayı masaüstünde dıştaki <aside> yapıyor (Layout.jsx);
+          burada ikinci bir kaydırma kutusu olursa çubuk sayfadan kopuyor.
+          Mobilde drawer olduğu için orada kendi kaydırması kalıyor. */}
+      <nav className="flex-1 overflow-y-auto lg:overflow-visible scrollbar-thin py-3 px-2">
         {NAV_GROUPS.map((group) => {
-          const visibleItems = group.items.filter((item) => !item.roles || item.roles.includes(currentRole));
+          // Menü de Ayarlar > Sayfa Erişimi'ni dinliyor. Eskiden yalnızca
+          // item.roles'e bakıyordu, o yüzden ayarlardan kapatılan bir sayfa
+          // menüde görünmeye devam ediyordu (tıklayınca "yetkin yok" diyordu).
+          const visibleItems = group.items.filter((item) =>
+            canAccess(item.to, currentRole, settings?.page_role_access)
+            && (!item.roles || item.roles.includes(currentRole) || currentRole === "admin")
+          );
           if (visibleItems.length === 0) return null;
           return (
             <div key={group.label} className="mb-3">

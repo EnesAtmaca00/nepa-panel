@@ -1,21 +1,13 @@
 {
-  "name": "AjansPro",
-  "short_name": "AjansPro",
-  "description": "Ajans yönetim sistemi",
+  "name": "Ne-Pa Panel",
+  "short_name": "Ne-Pa",
+  "description": "Ne-Pa Yazılım & Grafik — ajans yönetim paneli",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fafaf9",
   "theme_color": "#ea580c",
   "icons": [
-    {
-      "src": "https://base44.com/logo_v2.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "https://base44.com/logo_v2.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
-    }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }
