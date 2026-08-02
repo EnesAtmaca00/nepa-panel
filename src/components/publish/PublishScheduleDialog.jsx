@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import PublishMediaPicker from "./PublishMediaPicker";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trash2, Check, Zap } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -29,6 +31,8 @@ const DEFAULT = {
   platform: "instagram_post",
   account_handle: "",
   scheduled_at: "",
+  media_urls: [],
+  target_account_ids: [],
   caption: "",
   hashtags: [],
   notes: "",
@@ -47,9 +51,31 @@ export default function PublishScheduleDialog({ open, onOpenChange, schedule, co
 
   const set = (k, v) => setData(d => ({ ...d, [k]: v }));
 
+  // Bu firmanın bağlı sosyal hesapları. Otomatik paylaşımda hedef
+  // seçilmezse autoPostContent platforma uyan TÜM bağlı hesaplara
+  // gönderiyor — açık seçim daha güvenli.
+  const { data: accounts = [] } = useQuery({
+    queryKey: ["social-accounts", data.company_id],
+    enabled: !!data.company_id,
+    initialData: [],
+    queryFn: () => base44.entities.SocialMediaAccount.filter({
+      company_id: data.company_id, is_connected: true,
+    }),
+  });
+
+  const toggleAccount = (id) => {
+    const cur = data.target_account_ids || [];
+    set("target_account_ids", cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id]);
+  };
+
   const save = useMutation({
     mutationFn: async () => {
-      const payload = { ...data };
+      // Ayarlar sayfasındaki hatanın aynısı burada da olmasın:
+      // PostgREST tanımadığı TEK bir alan yüzünden tüm isteği reddediyor.
+      // schedule prop'u sunucudan geldiği için içinde id/created_date gibi
+      // gönderilmemesi gereken alanlar da var.
+      const { id: _id, created_date: _cd, updated_date: _ud, ...temiz } = data;
+      const payload = { ...temiz };
       if (data.company_id) {
         const c = companies.find(x => x.id === data.company_id);
         payload.company_name = c?.name;
@@ -65,6 +91,7 @@ export default function PublishScheduleDialog({ open, onOpenChange, schedule, co
       toast.success(data.id ? "Güncellendi" : "Yayın planı eklendi");
       onOpenChange(false);
     },
+    onError: (e) => toast.error("Kaydedilemedi: " + (e?.message || "bilinmeyen hata")),
   });
 
   const remove = useMutation({
@@ -114,6 +141,43 @@ export default function PublishScheduleDialog({ open, onOpenChange, schedule, co
               <Input type="datetime-local" value={data.scheduled_at ? data.scheduled_at.slice(0, 16) : ""} onChange={(e) => set("scheduled_at", e.target.value + ":00")} />
             </div>
           </div>
+
+          {/* Görsel: Storage'a yükleniyor. Platformlar görseli KENDİ
+              sunucularıyla indirdiği için herkese açık https adresi şart. */}
+          <PublishMediaPicker
+            value={data.media_urls || []}
+            onChange={(v) => set("media_urls", v)}
+          />
+
+          {/* Hedef hesaplar */}
+          {data.company_id && (
+            <div>
+              <Label className="mb-1.5">Hedef Hesaplar</Label>
+              {accounts.length === 0 ? (
+                <p className="text-xs text-muted-foreground">
+                  Bu firmanın bağlı hesabı yok. Sosyal Medya sayfasından bağlayın.
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  {accounts.map((a) => (
+                    <label key={a.id} className="flex items-center gap-2 text-sm cursor-pointer">
+                      <Checkbox
+                        checked={(data.target_account_ids || []).includes(a.id)}
+                        onCheckedChange={() => toggleAccount(a.id)}
+                      />
+                      <span className="capitalize">{a.platform}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {a.account_username ? `@${a.account_username}` : ""}
+                      </span>
+                    </label>
+                  ))}
+                  <p className="text-[11px] text-muted-foreground pt-1">
+                    Hiçbiri seçilmezse platforma uyan tüm bağlı hesaplara gönderilir.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
 
           <div>
             <Label className="mb-1.5">Caption</Label>

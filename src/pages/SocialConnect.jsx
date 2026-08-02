@@ -73,6 +73,8 @@ export default function SocialConnect() {
       queryClient.invalidateQueries({ queryKey: ["social-accounts"] });
       toast.success("Bağlantı kesildi");
     },
+    // onError yoktu: kesme başarısız olsa bile "kesildi" yazıyordu.
+    onError: (e) => toast.error("Kesilemedi: " + (e?.message || "bilinmeyen hata")),
   });
 
   const testPostMutation = useMutation({
