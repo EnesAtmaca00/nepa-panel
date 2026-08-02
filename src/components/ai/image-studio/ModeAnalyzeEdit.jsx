@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { base44 } from "@/api/base44Client";
-import { Loader2, Wand2, Copy, Trash2, Pencil, Palette, Type, X } from "lucide-react";
+import { Loader2, Wand2, Copy, Trash2, Pencil, Palette, Type, X, History, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import ImageUploader from "./ImageUploader";
 import { stripThinkBlocks } from "@/lib/intelligenceLayer";
@@ -49,10 +50,47 @@ export default function ModeAnalyzeEdit({ companyId }) {
   const [changes, setChanges] = useState([]);
   const [generatingPrompt, setGeneratingPrompt] = useState(false);
   const [editPrompt, setEditPrompt] = useState("");
+  const [historyId, setHistoryId] = useState(null);
 
   // Modal state
   const [modalObj, setModalObj] = useState(null);
   const [modalText, setModalText] = useState("");
+
+  // ━━━ GEÇMİŞ ━━━
+  // Eskiden yoktu: analiz edip prompt ürettikten sonra sayfadan çıkınca
+  // her şey kayboluyordu. Artık image_analysis_history tablosuna yazılıyor.
+  const queryClient = useQueryClient();
+  const historyKey = ["image-analysis-history", companyId];
+  const { data: history = [] } = useQuery({
+    queryKey: historyKey,
+    enabled: !!companyId,
+    initialData: [],
+    queryFn: () => base44.entities.ImageAnalysisHistory.filter(
+      { company_id: companyId }, "-created_date", 30,
+    ),
+  });
+
+  /** Geçmiş kaydını ekrana geri yükle. */
+  const restore = (kayit) => {
+    setImageUrl(kayit.image_url || "");
+    setObjects(kayit.objects || []);
+    setOverallStyle(kayit.overall_style || "");
+    setDominantColors(kayit.dominant_colors || []);
+    setMood(kayit.mood || "");
+    setChanges(kayit.changes || []);
+    setEditPrompt(kayit.edit_prompt || "");
+    toast.success("Geçmişten yüklendi");
+  };
+
+  const removeHistory = async (id) => {
+    if (!window.confirm("Bu kayıt geçmişten silinecek")) return;
+    try {
+      await base44.entities.ImageAnalysisHistory.delete(id);
+      queryClient.invalidateQueries({ queryKey: historyKey });
+    } catch (e) {
+      toast.error("Silinemedi: " + e.message);
+    }
+  };
 
   const analyze = async () => {
     if (!imageUrl) { toast.error("Önce görsel yükle"); return; }
@@ -60,6 +98,7 @@ export default function ModeAnalyzeEdit({ companyId }) {
     setObjects([]);
     setChanges([]);
     setEditPrompt("");
+    setHistoryId(null);
     try {
       const res = await base44.functions.invoke("aiInvoke", {
         task_type: "vision",
@@ -91,8 +130,31 @@ Her nesne için JSON döndür:
       setOverallStyle(data.overall_style || "");
       setDominantColors(data.dominant_colors || []);
       setMood(data.mood || "");
-      if (bulunan.length === 0) toast.warning("Görselde nesne tespit edilemedi.");
-      else toast.success(`${bulunan.length} nesne bulundu`);
+      if (bulunan.length === 0) {
+        toast.warning("Görselde nesne tespit edilemedi.");
+      } else {
+        toast.success(`${bulunan.length} nesne bulundu`);
+      }
+
+      // Geçmişe yaz. Başarısız olursa analiz yine de kullanılabilir olmalı,
+      // bu yüzden hata kullanıcıya bildiriliyor ama akış kesilmiyor.
+      if (companyId) {
+        try {
+          const kayit = await base44.entities.ImageAnalysisHistory.create({
+            company_id: companyId,
+            image_url: imageUrl,
+            objects: bulunan,
+            overall_style: data.overall_style || "",
+            dominant_colors: data.dominant_colors || [],
+            mood: data.mood || "",
+            model_used: payload.model_used || "",
+          });
+          setHistoryId(kayit.id);
+          queryClient.invalidateQueries({ queryKey: historyKey });
+        } catch (e) {
+          toast.warning("Analiz geçmişe kaydedilemedi: " + e.message);
+        }
+      }
     } catch (e) {
       toast.error("Analiz hatası: " + e.message);
     } finally {
@@ -142,7 +204,18 @@ Sadece düzenleme talimatını Midjourney v6 komut formatında yaz. Kısa, net, 
       const p2 = res.data || res;
       if (p2?.error) throw new Error(p2.error);
       const metin = typeof p2.result === "string" ? p2.result : JSON.stringify(p2.result ?? p2);
-      setEditPrompt(stripThinkBlocks(metin).trim());
+      const nihai = stripThinkBlocks(metin).trim();
+      setEditPrompt(nihai);
+
+      // Aynı analiz kaydına düzenleme promptunu da işle
+      if (historyId) {
+        try {
+          await base44.entities.ImageAnalysisHistory.update(historyId, {
+            changes, edit_prompt: nihai,
+          });
+          queryClient.invalidateQueries({ queryKey: historyKey });
+        } catch (_) { /* geçmiş kritik değil */ }
+      }
     } catch (e) {
       toast.error("Prompt üretilemedi: " + e.message);
     } finally {
@@ -278,6 +351,45 @@ Sadece düzenleme talimatını Midjourney v6 komut formatında yaz. Kısa, net, 
           <div className="py-16 text-center">
             <p className="font-serif italic text-muted-foreground">Görsel yükle ve analiz et.</p>
           </div>
+        )}
+
+        {/* ━━━ GEÇMİŞ ━━━ */}
+        {history.length > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                <History className="w-3.5 h-3.5" /> Geçmiş ({history.length})
+              </h3>
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {history.map((k) => (
+                  <div key={k.id} className="flex items-center gap-3 p-2 rounded border"
+                       style={{ borderColor: "hsl(var(--border-subtle))" }}>
+                    {k.image_url && (
+                      <img src={k.image_url} alt="" className="w-12 h-12 rounded object-cover shrink-0 border" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate">
+                        {k.objects?.length || 0} nesne
+                        {k.overall_style ? ` · ${k.overall_style}` : ""}
+                        {k.edit_prompt ? " · düzenleme promptu var" : ""}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {k.created_date ? new Date(k.created_date).toLocaleString("tr-TR") : ""}
+                      </p>
+                    </div>
+                    <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1 shrink-0"
+                            onClick={() => restore(k)}>
+                      <RotateCcw style={{ width: 11, height: 11 }} /> Yükle
+                    </Button>
+                    <button onClick={() => removeHistory(k.id)}
+                            className="text-muted-foreground hover:text-destructive shrink-0">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
 

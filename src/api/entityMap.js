@@ -20,6 +20,7 @@ export const ENTITY_TABLE = {
   HashtagSet: 'hashtag_sets',
   IdeaGenerationLog: 'idea_generation_logs',
   ImagePromptDraft: 'image_prompt_drafts',
+  ImageAnalysisHistory: 'image_analysis_history',
   Invoice: 'invoices',
   InvoiceTemplate: 'invoice_templates',
   MediaAsset: 'media_assets',
