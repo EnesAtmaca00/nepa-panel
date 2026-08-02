@@ -514,8 +514,14 @@ export default function Settings() {
 
         {/* SAYFA ERİŞİMİ */}
         <TabsContent value="erisim">
+          {/* HATA: eskiden settings={settings} veriliyordu. Bileşen kutuların
+              durumunu SUNUCU satırından okuyor, değişikliği ise data'ya
+              yazıyordu. Tıklayınca data değişiyor ama ekran hâlâ eski
+              settings'i çiziyordu — kutu anında geri dönüyor, özellik
+              tamamen kullanılamaz görünüyordu. Artık düzenlenmekte olan
+              state veriliyor. */}
           <PageAccessTab
-            settings={settings}
+            access={data.page_role_access}
             onUpdate={(newAccess) => {
               setData(d => ({ ...d, page_role_access: newAccess }));
             }}

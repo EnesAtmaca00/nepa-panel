@@ -1,10 +1,7 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ShieldCheck } from "lucide-react";
-import { PAGES, DEFAULT_ACCESS, ROLES as ROLE_KEYS } from "@/lib/pageAccess";
+import { PAGES, DEFAULT_ACCESS } from "@/lib/pageAccess";
 
 const ROLES = [
   { key: "admin", label: "Admin" },
@@ -13,8 +10,10 @@ const ROLES = [
   { key: "viewer", label: "Görüntüleyici" },
 ];
 
-export default function PageAccessTab({ settings, onUpdate }) {
-  const access = { ...DEFAULT_ACCESS, ...(settings?.page_role_access || {}) };
+export default function PageAccessTab({ access: gelen, onUpdate }) {
+  // Kaydedilmemiş değişiklikler de görünsün diye üst bileşenin
+  // düzenleme state'inden besleniyor, sunucu satırından değil.
+  const access = { ...DEFAULT_ACCESS, ...(gelen || {}) };
 
   const toggle = (path, role) => {
     if (role === "admin") return; // admin always stays
