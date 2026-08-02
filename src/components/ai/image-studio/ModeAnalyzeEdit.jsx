@@ -5,6 +5,29 @@ import { base44 } from "@/api/base44Client";
 import { Loader2, Wand2, Copy, Trash2, Pencil, Palette, Type, X } from "lucide-react";
 import { toast } from "sonner";
 import ImageUploader from "./ImageUploader";
+import { stripThinkBlocks } from "@/lib/intelligenceLayer";
+
+/**
+ * aiInvoke `result` alanını METİN olarak döndürür — json_mode açık olsa bile.
+ * Bu bileşen onu obje sanıp `data.objects` okuyordu, hep undefined geliyordu:
+ * analiz "çalışıyor" görünüp hiçbir nesne listelemiyordu.
+ *
+ * Modeller ayrıca ```json çitleri ve <think> blokları ekleyebiliyor.
+ */
+function parseJSON(raw) {
+  if (!raw) return null;
+  if (typeof raw === "object") return raw;
+  const temiz = stripThinkBlocks(String(raw))
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```\s*$/i, "")
+    .trim();
+  try { return JSON.parse(temiz); } catch (_) { /* devam */ }
+  const ilk = temiz.indexOf("{"), son = temiz.lastIndexOf("}");
+  if (ilk !== -1 && son > ilk) {
+    try { return JSON.parse(temiz.slice(ilk, son + 1)); } catch (_) { /* devam */ }
+  }
+  return null;
+}
 
 function ColorDot({ color }) {
   return (
@@ -40,7 +63,9 @@ export default function ModeAnalyzeEdit({ companyId }) {
     try {
       const res = await base44.functions.invoke("aiInvoke", {
         task_type: "vision",
-        model: "gemini-flash",
+        // model: "gemini-flash" KALDIRILDI — geçerli bir model kimliği
+        // değildi ve Ayarlar'daki varsayılanı eziyordu. Artık kullanıcının
+        // seçtiği model kullanılıyor.
         json_mode: true,
         image_urls: [imageUrl],
         prompt: `Bu görseli analiz et. İçindeki tüm görsel nesneleri listele.
@@ -54,11 +79,20 @@ Her nesne için JSON döndür:
   "mood": "kelimeler"
 }`,
       });
-      const data = res.data?.result || res.data;
-      setObjects(data?.objects || []);
-      setOverallStyle(data?.overall_style || "");
-      setDominantColors(data?.dominant_colors || []);
-      setMood(data?.mood || "");
+      const payload = res.data || res;
+      if (payload?.error) throw new Error(payload.error);
+
+      const data = parseJSON(payload.result ?? payload);
+      if (!data) {
+        throw new Error(`Yanıt okunamadı (model: ${payload.model_used || "?"}). Görseli okuyabilen bir model seçin — örn. GPT-4o, Gemini Flash, Claude Sonnet.`);
+      }
+      const bulunan = data.objects || [];
+      setObjects(bulunan);
+      setOverallStyle(data.overall_style || "");
+      setDominantColors(data.dominant_colors || []);
+      setMood(data.mood || "");
+      if (bulunan.length === 0) toast.warning("Görselde nesne tespit edilemedi.");
+      else toast.success(`${bulunan.length} nesne bulundu`);
     } catch (e) {
       toast.error("Analiz hatası: " + e.message);
     } finally {
@@ -105,7 +139,10 @@ ${changesText}
 
 Sadece düzenleme talimatını Midjourney v6 komut formatında yaz. Kısa, net, profesyonel.`,
       });
-      setEditPrompt(res.data?.result || res.data || "");
+      const p2 = res.data || res;
+      if (p2?.error) throw new Error(p2.error);
+      const metin = typeof p2.result === "string" ? p2.result : JSON.stringify(p2.result ?? p2);
+      setEditPrompt(stripThinkBlocks(metin).trim());
     } catch (e) {
       toast.error("Prompt üretilemedi: " + e.message);
     } finally {

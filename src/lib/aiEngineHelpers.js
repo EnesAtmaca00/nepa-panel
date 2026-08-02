@@ -126,6 +126,27 @@ export async function fetchRecentTitles(companyId, limit = 15) {
   }
 }
 
+/**
+ * Firmanın geçmişte kullandığı yayın saatleri.
+ *
+ * suggestTime() bunu genel platform kabullerinin ÖNÜNDE kullanıyor:
+ * firmanın kendi verisi her zaman genel tavsiyeden iyidir. Eskiden bu
+ * alanı model uyduruyordu ve %61'i "19:00" çıkıyordu.
+ */
+export async function fetchRecentTimes(companyId, limit = 20) {
+  if (!companyId) return [];
+  try {
+    const recent = await base44.entities.ContentIdea.filter(
+      { company_id: companyId, deleted: false },
+      "-created_date",
+      limit
+    );
+    return recent.map(i => i.suggested_time).filter(Boolean);
+  } catch (_e) {
+    return [];
+  }
+}
+
 /* ─────────────────────────────────────────────
    6. Auditor ajanı — İleri Seviye Lokal Kural Motoru
    AI çağrısı yapmadan kapsamlı kalite kontrolü

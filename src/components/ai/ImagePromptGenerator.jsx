@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import AIProviderSelector from "./AIProviderSelector";
 import AgentPipelineStatus from "./AgentPipelineStatus";
 import { newWorkflowId, logAgentStep, runAuditor } from "@/lib/aiEngineHelpers";
+import { negatifKopyalamaMetni } from "@/lib/contentSchema";
 import { loadCompanyContext } from "@/lib/companyContext";
 import { useJobs } from "@/lib/JobsContext";
 
@@ -460,7 +461,7 @@ export default function ImagePromptGenerator({ companyId, companies = [] }) {
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between mb-2">
                     <Label className="text-xs uppercase tracking-wide">Negative Prompt</Label>
-                    <Button size="sm" variant="outline" onClick={() => copy(result.negative_prompt)}>
+                    <Button size="sm" variant="outline" onClick={() => copy(negatifKopyalamaMetni(result.negative_prompt))}>
                       <Copy className="w-3 h-3 mr-1" /> Kopyala
                     </Button>
                   </div>

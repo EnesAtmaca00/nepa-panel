@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { negatifKopyalamaMetni } from "@/lib/contentSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -135,6 +136,12 @@ export default function MixResultCard({ idea, onSave, settings, company }) {
                   {idea.gorsel_prompt.tasarim_prompt && (
                     <Button size="sm" variant="outline" className="h-6 text-[10px]" onClick={() => copyToClipboard(idea.gorsel_prompt.tasarim_prompt, "Tasarım promptu kopyalandı")}>
                       <Copy className="w-2.5 h-2.5 mr-1" /> Tasarım
+                    </Button>
+                  )}
+                  {/* Negatif prompt görünüyordu ama kopyalanamıyordu. */}
+                  {idea.gorsel_prompt.negative && (
+                    <Button size="sm" variant="outline" className="h-6 text-[10px]" onClick={() => copyToClipboard(negatifKopyalamaMetni(idea.gorsel_prompt.negative), "Negative prompt kopyalandı")}>
+                      <Copy className="w-2.5 h-2.5 mr-1" /> Negative
                     </Button>
                   )}
                 </div>

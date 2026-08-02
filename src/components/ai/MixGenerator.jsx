@@ -22,11 +22,13 @@ import {
   logAgentStep,
   checkContentPillarBalance,
   fetchRecentTitles,
+  fetchRecentTimes,
   runAuditor,
   runReviewerAutoApprove,
 } from "@/lib/aiEngineHelpers";
 import { loadCompanyContext, buildAISystemPrompt } from "@/lib/companyContext";
 import { stripThinkBlocks, pollinationsGorselUrl } from "@/lib/intelligenceLayer";
+import { normalizePillar, suggestTime, buildNegativePrompt, planPillars } from "@/lib/contentSchema";
 import { useJobs } from "@/lib/JobsContext";
 
 const TONES = [
@@ -159,8 +161,9 @@ export default function MixGenerator({ companyId, companies = [] }) {
     runJob(
       async () => {
       const { mode, topic, platforms, contentType, tone, languages, count, specialDayId, generatorProvider, selectedModel } = snap;
-      const [recentTitles, { styleMemory, firmaBaglam }, pillarCheck] = await Promise.all([
+      const [recentTitles, recentTimes, { styleMemory, firmaBaglam }, pillarCheck] = await Promise.all([
         fetchRecentTitles(companyId, 10),
+        fetchRecentTimes(companyId, 20),
         loadCompanyContext(companyId, companies),
         checkContentPillarBalance(companyId),
       ]);
@@ -192,6 +195,10 @@ export default function MixGenerator({ companyId, companies = [] }) {
         ? `İçerik dengesi önerisi: "${pillarCheck.suggestion.recommendPillar}" kategorisine ağırlık ver.`
         : "";
 
+      // Pillar dağılımını KOD belirliyor. Ölçüm: modelin kendi seçimine
+      // bırakıldığında "sat" 71 fikirde 0 kez üretilmişti, %54'ü de boştu.
+      const pillarPlan = planPillars(count, pillarCheck.suggestion?.recommendPillar);
+
       const isSingle = count === 1;
       const userPrompt = `${recentBlock}
 ${modeContext}
@@ -210,26 +217,35 @@ Her fikir için şu JSON yapısını kullan (Türkçe). SADECE JSON döndür:
       "brief": "Detaylı senaryo: ne gösterilecek, nasıl çekilecek",
       "captions": {${languages.map(l => `"${l}": "${l} caption — emoji, CTA dahil"`).join(", ")}},
       "hashtags": {"ana": ["#1","#2","#3","#4","#5"], "trend": ["#1","#2","#3"], "nis": ["#1","#2"]},
-      "content_pillar": "egit|eglendir|sat|guven",
-      "suggested_time": "19:00",
       "format": "Neden bu format (1 cümle)",
       "tools": "Canva, Premiere, CapCut...",
       "gorsel_prompt": {
         "turkce": "Türkçe görsel açıklaması",
         "ingilizce": "Professional English image prompt — subject, angle, lighting, color, mood, composition. 3+ sentences.",
-        "negative": "low quality, blurry, watermark, distorted",
         "tasarim_prompt": "Grafik tasarım: metin yerleşimi, tipografi, renk blokları"
       }
     }
   ]
 }`;
 
+      // Kod-sahibi alanlar: modelden İSTEME. Ürettiği değerler ölçülebilir
+      // şekilde bozuktu; artık montaj sonrası kodda ekleniyorlar.
+      const kurallar = `
+ZORUNLU KURALLAR
+- Fikirlerin içerik kategorileri SIRAYLA şunlar olacak: ${pillarPlan.map((p, n) => `${n + 1}. fikir = ${p}`).join(", ")}. Bu sıraya uy.
+- "content_pillar", "suggested_time" ve "negative" alanlarını YAZMA — onları sistem kendisi ekliyor.
+- gorsel_prompt HER fikir için doldurulmalı; yer kalmayacaksa fikir sayısını değil, brief uzunluğunu kıs.`;
+
       const res = await base44.functions.invoke("aiInvoke", {
         task_type: "mix",
         system_prompt: systemPrompt,
-        prompt: userPrompt,
+        prompt: userPrompt + kurallar,
         json_mode: true,
         skip_cache: true,
+        // Token bütçesi adet başına ölçekleniyor. Sabit 3000'de 3. fikrin
+        // gorsel_prompt'u HER SEFERİNDE kesiliyordu (ölçüm: 0/12).
+        // Fikir başına ~1100 token + şema/başlık payı.
+        max_tokens: Math.min(1100 * count + 700, 8000),
         provider_override: generatorProvider !== "auto" ? generatorProvider : undefined,
         model_override: selectedModel || undefined,
       });
@@ -258,17 +274,40 @@ Her fikir için şu JSON yapısını kullan (Türkçe). SADECE JSON döndür:
         }
       }
 
-      const suggestedPillar = pillarCheck.suggestion?.recommendPillar;
-      const ideas = (parsed.ideas || []).map(i => ({
-        ...i,
-        content_pillar: i.content_pillar || suggestedPillar || null,
-        workflow_id: workflowId,
-        platform: i.platform || platforms[0],
-        // Pollinations URL
-        _imageUrl: i.gorsel_prompt?.ingilizce && settings?.pollinations_enabled !== false
-          ? pollinationsGorselUrl(i.gorsel_prompt.ingilizce)
-          : null,
-      }));
+      // ━━━ DETERMİNİSTİK MONTAJ ━━━
+      // Model yaratıcı içeriği verdi; kategori, saat ve negatif prompt'u
+      // kod ekliyor. Model yine de bir pillar yazdıysa normalize edip
+      // kabul ediyoruz, tanınmazsa plandaki değere düşüyoruz.
+      const ideas = (parsed.ideas || []).map((i, n) => {
+        const platform = i.platform || platforms[0];
+        const gorsel = i.gorsel_prompt || {};
+        const yaziVar = /text|typography|yazı|metin/i.test(gorsel.tasarim_prompt || "");
+        return {
+          ...i,
+          platform,
+          content_pillar: normalizePillar(i.content_pillar) || pillarPlan[n] || pillarPlan[0],
+          suggested_time: suggestTime(platform, recentTimes),
+          gorsel_prompt: {
+            ...gorsel,
+            negative: buildNegativePrompt({
+              fotografik: !/illüstrasyon|vektör|çizim|3d/i.test(contentType + " " + (gorsel.turkce || "")),
+              yaziVar,
+              logoVar: /logo/i.test(gorsel.tasarim_prompt || ""),
+            }),
+          },
+          workflow_id: workflowId,
+          // Pollinations URL
+          _imageUrl: gorsel.ingilizce && settings?.pollinations_enabled !== false
+            ? pollinationsGorselUrl(gorsel.ingilizce)
+            : null,
+        };
+      });
+
+      // Eksik gorsel_prompt hâlâ varsa sessizce yutma — kullanıcı bilsin.
+      const eksikGorsel = ideas.filter(i => !i.gorsel_prompt?.ingilizce).length;
+      if (eksikGorsel > 0) {
+        toast.warning(`${eksikGorsel} fikrin görsel prompt'u eksik geldi. Daha az adet veya daha güçlü bir model deneyin.`);
+      }
 
       setResults(ideas);
 
