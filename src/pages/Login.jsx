@@ -158,6 +158,16 @@ export default function Login() {
           Hesabın yoksa yöneticinden davet istemen gerekiyor.
         </p>
       </div>
+
+      {/* Meta App Review, gizlilik politikasına giriş ekranından
+          erişilebilmesini bekliyor. */}
+      <p className="mt-8 text-center text-xs text-muted-foreground">
+        <a href="/gizlilik" className="hover:underline">Gizlilik Politikası</a>
+        {" · "}
+        <a href="/kullanim-kosullari" className="hover:underline">Kullanım Koşulları</a>
+        {" · "}
+        <a href="/veri-silme" className="hover:underline">Veri Silme</a>
+      </p>
     </div>
   );
 }

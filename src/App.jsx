@@ -28,6 +28,7 @@ import Reports from '@/pages/Reports';
 import Notifications from '@/pages/Notifications';
 import PublicApproval from '@/pages/PublicApproval';
 import Login from '@/pages/Login';
+import { Gizlilik, KullanimKosullari, VeriSilme } from '@/pages/Legal';
 import QuickPlanning from '@/pages/QuickPlanning';
 import AgentConnect from '@/pages/AgentConnect';
 import Inbox from '@/pages/Inbox';
@@ -74,6 +75,11 @@ const AuthenticatedApp = () => {
     return (
       <Routes>
         <Route path="/onay/:token" element={<PublicApproval />} />
+      {/* Yasal sayfalar — Meta/TikTok/LinkedIn App Review inceleyicisi
+          bunlara OTURUM AÇMADAN giriyor, o yüzden auth'ın dışındalar. */}
+      <Route path="/gizlilik" element={<Gizlilik />} />
+      <Route path="/kullanim-kosullari" element={<KullanimKosullari />} />
+      <Route path="/veri-silme" element={<VeriSilme />} />
         <Route path="*" element={<Login />} />
       </Routes>
     );
@@ -84,6 +90,12 @@ const AuthenticatedApp = () => {
       {/* Public route */}
       <Route path="/onay/:token" element={<PublicApproval />} />
       <Route path="/giris" element={<Login />} />
+      {/* Yasal sayfalar — Meta/TikTok/LinkedIn App Review inceleyicisi
+          bunlara OTURUM AÇMADAN giriyor, o yüzden auth'ın dışındalar. */}
+      <Route path="/gizlilik" element={<Gizlilik />} />
+      <Route path="/kullanim-kosullari" element={<KullanimKosullari />} />
+      <Route path="/veri-silme" element={<VeriSilme />} />
+
 
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
