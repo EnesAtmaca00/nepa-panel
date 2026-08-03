@@ -29,6 +29,7 @@ import Notifications from '@/pages/Notifications';
 import PublicApproval from '@/pages/PublicApproval';
 import Login from '@/pages/Login';
 import { Gizlilik, KullanimKosullari, VeriSilme } from '@/pages/Legal';
+import Tani from '@/pages/Tani';
 import QuickPlanning from '@/pages/QuickPlanning';
 import AgentConnect from '@/pages/AgentConnect';
 import Inbox from '@/pages/Inbox';
@@ -99,6 +100,9 @@ const AuthenticatedApp = () => {
 
       <Route element={<Layout />}>
         <Route path="/" element={<Dashboard />} />
+        {/* Teşhis sayfası bilerek RoleGuard'sız: sorunu yaşayan kişi
+            çoğu zaman yetki sorunu yaşıyor, korumalı olsa açamazdı. */}
+        <Route path="/tani" element={<Tani />} />
         <Route path="/anlik-planlama" element={<RoleGuard allowedRoles={AME}><QuickPlanning /></RoleGuard>} />
         <Route path="/icerik-takvimi" element={<RoleGuard allowedRoles={AME}><IcerikMerkezi /></RoleGuard>} />
         <Route path="/yayin-takvimi" element={<RoleGuard allowedRoles={AME}><IcerikMerkezi /></RoleGuard>} />
