@@ -40,6 +40,22 @@ export const AuthProvider = ({ children }) => {
       }
       const me = await base44.auth.me();
 
+      // app_users satırı yok — panel açılırsa her sayfa boş görünür ve
+      // kullanıcı sebebini anlayamaz. Oturumu KAPATMIYORUZ ki mesajı
+      // okuyabilsin ve yöneticiye ne söyleyeceğini bilsin.
+      if (me.has_profile === false) {
+        setUser(null);
+        setIsAuthenticated(false);
+        setAuthError({
+          type: 'profile_missing',
+          message:
+            'Giriş yapıldı ama bu hesabın panelde bir kullanıcı kaydı yok. ' +
+            'Bu yüzden hiçbir veri görünmez. Yöneticinin Ayarlar > Ekip ' +
+            'bölümünden hesabını eklemesi gerekiyor.',
+        });
+        return;
+      }
+
       // Devre dışı bırakılmış hesap oturum açabilir ama panele girmemeli.
       if (me.active === false) {
         await supabase.auth.signOut();

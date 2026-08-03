@@ -138,6 +138,17 @@ function makeAuth(client) {
       const { data: profile } = await client
         .from('app_users').select('*').eq('id', user.id).maybeSingle();
 
+      // app_users satırı YOKSA bu sessizce geçilecek bir durum değil.
+      //
+      // Eskiden burada `active: profile?.active ?? true` yazıyordu:
+      // satır yoksa "herhalde aktiftir" deyip kullanıcıyı içeri alıyordu.
+      // Panel normal açılıyor, menü görünüyor — ama veritabanındaki RLS
+      // kuralları auth.uid() ile eşleşen app_users satırını arıyor,
+      // bulamayınca HER tabloyu boş döndürüyor. Üstelik bu bir hata
+      // değil, başarılı-ama-sıfır-satır yanıtı; ekranda hiçbir uyarı
+      // çıkmıyor ve kullanıcı "bütün verilerim gitti" sanıyor.
+      //
+      // Artık bayrak taşınıyor, AuthContext bunu görünce açıkça söylüyor.
       return {
         id: user.id,
         email: user.email,
@@ -145,7 +156,8 @@ function makeAuth(client) {
         role: profile?.role ?? 'user',
         agency_role: profile?.agency_role ?? 'editor',
         assigned_companies: profile?.assigned_companies ?? [],
-        active: profile?.active ?? true,
+        active: profile?.active ?? false,
+        has_profile: !!profile,
         created_date: profile?.created_date,
       };
     },

@@ -79,6 +79,16 @@ export default function Login() {
           </p>
         </div>
 
+        {/* app_users satırı yok — en kafa karıştırıcı durum: giriş
+            başarılı ama panelde hiçbir veri görünmüyor. Sebebi açıkça
+            yazılıyor ki kullanıcı yöneticiye ne söyleyeceğini bilsin. */}
+        {authError?.type === 'profile_missing' && (
+          <div className="mb-4 flex gap-2 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-900">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <span>{authError.message}</span>
+          </div>
+        )}
+
         {authError?.type === 'account_disabled' && (
           <div className="mb-4 flex gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-900">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
