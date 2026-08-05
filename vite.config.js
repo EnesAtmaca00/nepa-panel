@@ -6,6 +6,9 @@ import path from 'path'
 // gibi Base44'e özgü şeyler sağlıyordu). '@' takma adını o eklenti tanımlıyordu,
 // bu yüzden burada elle tanımlanması gerekiyor.
 export default defineConfig({
+  // Teşhis sayfası hangi build'in çalıştığını gösterebilsin —
+  // 'eski sürüme bakıyor olabilir miyim' sorusunu kesin cevaplar.
+  define: { __BUILD_ZAMANI__: JSON.stringify(new Date().toISOString()) },
   logLevel: 'error',
   plugins: [react()],
   resolve: {

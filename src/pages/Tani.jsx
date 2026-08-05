@@ -108,6 +108,55 @@ export default function Tani() {
       }
       r.ham.sayimlar = sayimlar;
 
+      // ── 3b. SHIM YOLU ──
+      // Kritik karşılaştırma: yukarıdaki sayımlar supabase.from() ile
+      // DOĞRUDAN yapıldı. Sayfalar ise base44.entities.X.filter() ile
+      // çekiyor. Biri çalışıp diğeri çalışmıyorsa sorun shim'de ya da
+      // sorgu katmanındadır — veritabanında değil.
+      const shim = {};
+      try {
+        const t1 = performance.now();
+        const firmalar = await base44.entities.Company.filter(
+          { deleted: false }, "-created_date", 200);
+        shim.companies = { adet: firmalar.length, sure: Math.round(performance.now() - t1) };
+        ekle(firmalar.length > 0 ? "ok" : "hata",
+          `Shim (sayfaların kullandığı yol): ${firmalar.length} firma`,
+          firmalar.length === 0
+            ? "Ham sorgu veriyi görüyor ama shim göremiyor — sorun uygulama katmanında."
+            : `${shim.companies.sure} ms · ilk kayıt: ${firmalar[0]?.name ?? "-"}`);
+      } catch (e) {
+        shim.companies = { hata: e.message };
+        ekle("hata", "Shim ile firma çekilemedi", e.message);
+      }
+
+      try {
+        const gorevler = await base44.entities.Task.filter({ deleted: false }, "-created_date", 50);
+        shim.tasks = { adet: gorevler.length };
+        ekle(gorevler.length > 0 ? "ok" : "uyari", `Shim: ${gorevler.length} görev`);
+      } catch (e) {
+        shim.tasks = { hata: e.message };
+        ekle("hata", "Shim ile görev çekilemedi", e.message);
+      }
+
+      // Sıralamasız/filtresiz en yalın çağrı — sorun filtrede mi sıralamada mı?
+      try {
+        const yalin = await base44.entities.Company.list(null, 5);
+        shim.yalin = yalin.length;
+        ekle(yalin.length > 0 ? "ok" : "hata",
+          `Shim yalın (filtresiz, sıralamasız): ${yalin.length} firma`,
+          yalin.length > 0 && (shim.companies?.adet === 0)
+            ? "Yalın çağrı çalışıyor ama filtreli çalışmıyor -> sorun deleted filtresinde veya sıralamada."
+            : undefined);
+      } catch (e) {
+        shim.yalin = e.message;
+        ekle("hata", "Shim yalın çağrı hatası", e.message);
+      }
+      r.ham.shim = shim;
+
+      // Uygulamanın sürümü — eski build'e bakıyor olma ihtimalini eler
+      r.ham.build = { zaman: __BUILD_ZAMANI__, adres: window.location.origin };
+      ekle("ok", "Çalışan sürüm", `${__BUILD_ZAMANI__} · ${window.location.origin}`);
+
       // ── 4. Edge Function erişimi ──
       try {
         const bas = performance.now();
