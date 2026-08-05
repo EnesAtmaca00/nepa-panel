@@ -395,6 +395,9 @@ export default function Araclar() {
     queryKey: ["resource-tools"],
     queryFn: () => base44.entities.ResourceTool.filter({ deleted: false }, "-created_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const deleteMutation = useMutation({

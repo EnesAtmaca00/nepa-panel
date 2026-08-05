@@ -37,18 +37,27 @@ export default function Targets() {
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.filter({ status: "active" }, "-created_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: ideas = [] } = useQuery({
     queryKey: ["ideas-all"],
     queryFn: () => base44.entities.ContentIdea.list("-scheduled_date", 1000),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: recurring = [] } = useQuery({
     queryKey: ["recurring-all"],
     queryFn: () => base44.entities.RecurringContentInstance.list("-target_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const stats = useMemo(() => {

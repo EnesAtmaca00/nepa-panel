@@ -22,6 +22,9 @@ export default function SectorAnalysisPanel() {
     queryKey: ["sektor-analizleri"],
     queryFn: () => base44.entities.SektorAnalizi.list("-son_analiz_tarihi", 50),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const handleRun = () => {

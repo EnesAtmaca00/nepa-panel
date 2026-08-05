@@ -131,6 +131,9 @@ export default function MixGenerator({ companyId, companies = [] }) {
       ? base44.entities.IdeaGenerationLog.filter({ company_id: companyId }, "-created_date", 20)
       : Promise.resolve([]),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     enabled: !!companyId,
   });
 
@@ -138,6 +141,9 @@ export default function MixGenerator({ companyId, companies = [] }) {
     queryKey: ["special-days"],
     queryFn: () => base44.entities.SpecialDay.list("name", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
   const [specialDayId, setSpecialDayId] = useState("");
 
@@ -145,6 +151,9 @@ export default function MixGenerator({ companyId, companies = [] }) {
     queryKey: ["app-settings-mix"],
     queryFn: async () => { const l = await base44.entities.AppSettings.list(); return l?.[0] || {}; },
     initialData: {},
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const togglePlatform = (p) => setPlatforms(arr => arr.includes(p) ? arr.filter(x => x !== p) : [...arr, p]);

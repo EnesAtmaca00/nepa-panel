@@ -21,6 +21,9 @@ export default function RecurringWeekPanel() {
       50
     ),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const updateStatus = useMutation({

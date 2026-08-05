@@ -51,6 +51,9 @@ export default function AutoAgentsPanel() {
     queryKey: ["app-settings-auto-agents"],
     queryFn: async () => (await base44.entities.AppSettings.list())?.[0] || {},
     initialData: {},
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   // Tüm firmaları zenginleştir

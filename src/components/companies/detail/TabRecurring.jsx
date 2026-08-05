@@ -20,6 +20,9 @@ export default function TabRecurring({ company }) {
     queryKey: ["recurring-templates"],
     queryFn: () => base44.entities.RecurringContentTemplate.list(),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     onSuccess: (data) => {
       // İlk yüklemede local state'i ayarla
       if (localSubs === null) {
@@ -42,6 +45,9 @@ export default function TabRecurring({ company }) {
     queryKey: ["recurring-instances", company.id],
     queryFn: () => base44.entities.RecurringContentInstance.filter({ company_id: company.id }, "-target_date", 50),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const toggleSubscription = useMutation({

@@ -13,24 +13,36 @@ export default function TabAIHistory({ company }) {
     queryKey: ["ai-chat-sessions", company.id],
     queryFn: () => base44.entities.AIChatSession.filter({ company_id: company.id }, "-last_message_at", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: prompts = [] } = useQuery({
     queryKey: ["ai-prompt-history", company.id],
     queryFn: () => base44.entities.AIPromptHistory.filter({ company_id: company.id }, "-created_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: ideaLogs = [] } = useQuery({
     queryKey: ["idea-generation-logs", company.id],
     queryFn: () => base44.entities.IdeaGenerationLog.filter({ company_id: company.id }, "-created_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: competitorReports = [] } = useQuery({
     queryKey: ["competitor-reports", company.id],
     queryFn: () => base44.entities.CompetitorReport.filter({ company_id: company.id }, "-created_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const fmt = (d) => format(new Date(d), "d MMM yyyy HH:mm", { locale: tr });

@@ -28,12 +28,18 @@ export default function Companies() {
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false }, "-created_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["invoices"],
     queryFn: () => base44.entities.Invoice.list("-issue_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   // Retention için son 30 günde içerik üretilen firmaları sayalım
@@ -41,6 +47,9 @@ export default function Companies() {
     queryKey: ["companies-recent-ideas"],
     queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-created_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   // Madde 3: StyleMemory yok badge için
@@ -48,6 +57,9 @@ export default function Companies() {
     queryKey: ["companies-style-mems"],
     queryFn: () => base44.entities.StyleMemory.list("-updated_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
   const styleMap = useMemo(() => {
     const s = new Set();

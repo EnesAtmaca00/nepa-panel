@@ -31,30 +31,45 @@ export default function Dashboard() {
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false }, "-created_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["invoices"],
     queryFn: () => base44.entities.Invoice.list("-issue_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: targets = [] } = useQuery({
     queryKey: ["targets"],
     queryFn: () => base44.entities.TargetTracking.list("-period_start", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: expenses = [] } = useQuery({
     queryKey: ["expenses-dashboard"],
     queryFn: () => base44.entities.Expense.filter({ deleted_at: null }, "-payment_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: pendingIdeas = [] } = useQuery({
     queryKey: ["dashboard-pending-internal"],
     queryFn: () => base44.entities.ContentIdea.filter({ approval_mode: "manual_internal", approval_status: "pending_internal" }, "-created_date", 5),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   // KATMAN 4C: Anomali dedektörü + KATMAN 3A: Döviz kuru güncelleme (sayfa açılınca bir kez)
@@ -82,6 +97,9 @@ export default function Dashboard() {
     queryKey: ["dashboard-client-approvals"],
     queryFn: () => base44.entities.ClientApproval.filter({ status: "pending" }, "-sent_at", 5),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const stats = useMemo(() => {
@@ -147,6 +165,9 @@ export default function Dashboard() {
     queryKey: ["app-settings-dashboard"],
     queryFn: () => base44.entities.AppSettings.list(),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
   const exchangeRate = settingsListData.data?.[0]?.exchange_rate_eur_try || 38;
 

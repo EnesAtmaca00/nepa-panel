@@ -11,6 +11,9 @@ export default function PortfolioSummary({ companies = [] }) {
     queryKey: ["app-settings-portfolio"],
     queryFn: () => base44.entities.AppSettings.list(),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
   const exchangeRate = settingsList?.[0]?.exchange_rate_eur_try || 38;
 

@@ -14,12 +14,18 @@ export default function NoContentCompanies() {
     queryKey: ["no-content-active-companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false, status: "active" }, "name", 300),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: ideas = [] } = useQuery({
     queryKey: ["no-content-ideas"],
     queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-created_date", 1000),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const noContentCompanies = useMemo(() => {

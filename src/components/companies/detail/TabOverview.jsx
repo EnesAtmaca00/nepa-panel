@@ -11,12 +11,18 @@ export default function TabOverview({ company }) {
     queryKey: ["invoices", company.id],
     queryFn: () => base44.entities.Invoice.filter({ company_id: company.id }, "-issue_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: targets = [] } = useQuery({
     queryKey: ["targets", company.id],
     queryFn: () => base44.entities.TargetTracking.filter({ company_id: company.id }, "-period_start", 20),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const stats = useMemo(() => {

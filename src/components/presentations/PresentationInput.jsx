@@ -19,6 +19,9 @@ export default function PresentationInput({ onCancel, onSubmit }) {
     queryKey: ["companies-for-presentation"],
     queryFn: () => base44.entities.Company.filter({ deleted: false, status: "active" }, "-updated_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const selectedCompany = companies.find((c) => c.id === companyId);

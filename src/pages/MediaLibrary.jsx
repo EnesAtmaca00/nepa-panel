@@ -78,6 +78,9 @@ export default function MediaLibrary() {
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false }, "name", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: assets = [], isLoading } = useQuery({
@@ -88,6 +91,9 @@ export default function MediaLibrary() {
       return base44.entities.MediaAsset.filter(filter, "-created_date", 500);
     },
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const updateMutation = useMutation({

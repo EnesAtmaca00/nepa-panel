@@ -63,6 +63,9 @@ export default function TopBar({ darkMode, setDarkMode, onMenuClick }) {
     queryKey: ["notifications-unread"],
     queryFn: () => base44.entities.Notification.filter({ read: false }, "-created_date", 50),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     refetchInterval: 60000,
   });
 

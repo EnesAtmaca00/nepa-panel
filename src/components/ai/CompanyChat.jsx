@@ -42,6 +42,9 @@ export default function CompanyChat({ companyId, companies = [] }) {
       50
     ),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const selectedCompany = companies.find(c => c.id === companyId);

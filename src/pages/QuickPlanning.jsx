@@ -55,18 +55,27 @@ export default function QuickPlanning() {
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false, status: "active" }, "name", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: templates = [] } = useQuery({
     queryKey: ["recurring-templates"],
     queryFn: () => base44.entities.RecurringContentTemplate.filter({ active: true }, "name", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: specialDays = [] } = useQuery({
     queryKey: ["special-days"],
     queryFn: () => base44.entities.SpecialDay.list("name", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: todayTasks = [] } = useQuery({

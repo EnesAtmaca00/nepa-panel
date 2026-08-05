@@ -14,19 +14,19 @@ const CHART_COLORS = ["#D4AF37", "#0F172A", "#10B981", "#EF4444", "#3B82F6", "#8
 
 export default function Reports() {
   const { data: companies = [] } = useQuery({
-    queryKey: ["companies"], queryFn: () => base44.entities.Company.filter({ deleted: false }, "name", 500), initialData: [],
+    queryKey: ["companies"], queryFn: () => base44.entities.Company.filter({ deleted: false }, "name", 500), initialData: [], initialDataUpdatedAt: 0,
   });
   const { data: invoices = [] } = useQuery({
-    queryKey: ["invoices-all"], queryFn: () => base44.entities.Invoice.filter({ deleted: false }, "-issue_date", 1000), initialData: [],
+    queryKey: ["invoices-all"], queryFn: () => base44.entities.Invoice.filter({ deleted: false }, "-issue_date", 1000), initialData: [], initialDataUpdatedAt: 0,
   });
   const { data: services = [] } = useQuery({
-    queryKey: ["services"], queryFn: () => base44.entities.ServiceCatalog.list(), initialData: [],
+    queryKey: ["services"], queryFn: () => base44.entities.ServiceCatalog.list(), initialData: [], initialDataUpdatedAt: 0,
   });
   const { data: ideas = [] } = useQuery({
-    queryKey: ["all-ideas"], queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-scheduled_date", 1000), initialData: [],
+    queryKey: ["all-ideas"], queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-scheduled_date", 1000), initialData: [], initialDataUpdatedAt: 0,
   });
   const { data: recurring = [] } = useQuery({
-    queryKey: ["all-recurring"], queryFn: () => base44.entities.RecurringContentInstance.list("-target_date", 500), initialData: [],
+    queryKey: ["all-recurring"], queryFn: () => base44.entities.RecurringContentInstance.list("-target_date", 500), initialData: [], initialDataUpdatedAt: 0,
   });
 
   // Aylık gelir (son 6 ay)

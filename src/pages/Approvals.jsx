@@ -18,12 +18,18 @@ export default function Approvals() {
     queryKey: ["pending-approvals"],
     queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-created_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: clientApprovals = [] } = useQuery({
     queryKey: ["client-approvals"],
     queryFn: () => base44.entities.ClientApproval.list("-sent_at", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const internalPending = ideas.filter(i => i.approval_mode === "manual_internal" && i.approval_status === "pending_internal");

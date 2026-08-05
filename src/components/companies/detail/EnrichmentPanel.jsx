@@ -20,6 +20,9 @@ export default function EnrichmentPanel({ company }) {
     queryFn: () => base44.entities.FirmaBaglamHafizasi.filter({ company_id: company.id }, "-son_guncelleme", 1),
     enabled: !!company?.id,
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
   const baglam = baglamlar?.[0];
   const zenginlestirme = baglam?.zenginlestirme_verisi;

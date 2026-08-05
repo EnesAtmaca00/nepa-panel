@@ -25,6 +25,9 @@ export default function TabApprovalHistory({ company }) {
     queryKey: ["company-approvals", company.id],
     queryFn: () => base44.entities.ClientApproval.filter({ company_id: company.id }, "-sent_at", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   if (approvals.length === 0) {

@@ -58,6 +58,9 @@ export default function PublishScheduleDialog({ open, onOpenChange, schedule, co
     queryKey: ["social-accounts", data.company_id],
     enabled: !!data.company_id,
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     queryFn: () => base44.entities.SocialMediaAccount.filter({
       company_id: data.company_id, is_connected: true,
     }),

@@ -36,6 +36,9 @@ export default function TabCompetitors({ company }) {
     queryKey: ["competitor-reports", company.id],
     queryFn: () => base44.entities.CompetitorReport.filter({ company_id: company.id }, "-created_date", 10),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     refetchInterval: analyzing ? 8000 : false,
   });
 

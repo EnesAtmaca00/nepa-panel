@@ -9,6 +9,9 @@ export default function StyleMemoryWarning({ company }) {
     queryKey: ["style-memory-warn", company.id],
     queryFn: () => base44.entities.StyleMemory.filter({ company_id: company.id }, "-updated_date", 1),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     enabled: !!company?.id,
   });
 

@@ -33,12 +33,18 @@ export default function MuhakemeIzi() {
     queryKey: ["agent-workflow-logs"],
     queryFn: () => base44.entities.AgentWorkflowLog.list("-created_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ["companies-min"],
     queryFn: () => base44.entities.Company.list("name", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const companyMap = useMemo(() => {

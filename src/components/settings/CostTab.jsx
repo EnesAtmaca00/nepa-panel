@@ -22,6 +22,9 @@ export default function CostTab({ monthlyBudget = 20 }) {
     queryKey: ["ai-cache-all"],
     queryFn: () => base44.entities.AICache.list("-created_date", 2000),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const now = new Date();

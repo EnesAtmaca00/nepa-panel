@@ -29,6 +29,9 @@ export default function TabPublish({ company }) {
     queryKey: ["publish-schedules", company.id],
     queryFn: () => base44.entities.PublishSchedule.filter({ company_id: company.id, deleted: false }, "-scheduled_at", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const markPublished = useMutation({

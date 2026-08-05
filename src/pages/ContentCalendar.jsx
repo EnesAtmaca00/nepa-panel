@@ -36,12 +36,18 @@ export default function ContentCalendar() {
     queryKey: ["all-ideas"],
     queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-scheduled_date", 1000),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false }, "name", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const days = useMemo(() => getMonthDays(date.getFullYear(), date.getMonth()), [date]);

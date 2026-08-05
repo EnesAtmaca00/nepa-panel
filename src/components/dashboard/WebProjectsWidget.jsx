@@ -12,6 +12,9 @@ export default function WebProjectsWidget() {
     queryKey: ["web-projects-widget"],
     queryFn: () => base44.entities.WebsiteProject.list("-created_date", 100),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const stats = useMemo(() => {

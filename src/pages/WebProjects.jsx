@@ -28,6 +28,9 @@ export default function WebProjects() {
     queryKey: ["web-projects"],
     queryFn: () => base44.entities.WebsiteProject.list("-created_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     refetchInterval: 8000,
   });
 
@@ -35,6 +38,9 @@ export default function WebProjects() {
     queryKey: ["companies-for-web-projects"],
     queryFn: () => base44.entities.Company.filter({ deleted: false }, "name", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const removeProject = useMutation({

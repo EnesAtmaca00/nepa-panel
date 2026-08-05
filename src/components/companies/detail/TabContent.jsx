@@ -18,12 +18,18 @@ export default function TabContent({ company }) {
     queryKey: ["company-ideas", company.id],
     queryFn: () => base44.entities.ContentIdea.filter({ company_id: company.id, deleted: false }, "-scheduled_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ["companies-mini"],
     queryFn: () => base44.entities.Company.filter({ deleted: false }, "name", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   return (

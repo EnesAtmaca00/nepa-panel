@@ -65,6 +65,9 @@ export default function ModeAnalyzeEdit({ companyId }) {
     queryKey: historyKey,
     enabled: !!companyId,
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     queryFn: () => base44.entities.ImageAnalysisHistory.filter(
       { company_id: companyId }, "-created_date", 30,
     ),

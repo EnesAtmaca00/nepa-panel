@@ -11,18 +11,27 @@ export default function CustomerScoreBar({ company }) {
     queryKey: ["company-content-count", company.id],
     queryFn: () => base44.entities.ContentIdea.filter({ company_id: company.id, deleted: false }, "-created_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["company-invoice-count", company.id],
     queryFn: () => base44.entities.Invoice.filter({ company_id: company.id, deleted: false }, "-issue_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ["company-task-count", company.id],
     queryFn: () => base44.entities.Task.filter({ company_id: company.id, deleted: false }, "-created_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const clv = (company.monthly_fee || 0) * 12;

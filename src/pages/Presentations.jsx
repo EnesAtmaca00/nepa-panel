@@ -40,12 +40,18 @@ export default function Presentations() {
     queryKey: ["app-settings-presentations"],
     queryFn: async () => (await base44.entities.AppSettings.list())?.[0] || {},
     initialData: {},
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: presentations = [], isLoading } = useQuery({
     queryKey: ["presentations"],
     queryFn: () => base44.entities.Presentation.filter({ deleted: false }, "-updated_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const resetToList = () => {

@@ -84,6 +84,9 @@ export default function ImagePromptGenerator({ companyId, companies = [] }) {
       ? base44.entities.AIPromptHistory.filter({ company_id: companyId }, "-created_date", 30)
       : Promise.resolve([]),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
     enabled: !!companyId,
   });
 

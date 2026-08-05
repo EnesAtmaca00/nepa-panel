@@ -64,6 +64,9 @@ export default function PerformanceDashboard({ companyId }) {
     queryFn: () => base44.entities.ContentIdea.filter({ company_id: companyId, deleted: false }, "-scheduled_date", 500),
     enabled: !!companyId,
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: reports = [] } = useQuery({
@@ -71,6 +74,9 @@ export default function PerformanceDashboard({ companyId }) {
     queryFn: () => base44.entities.CompetitorReport.filter({ company_id: companyId, status: "completed" }, "-created_date", 5),
     enabled: !!companyId,
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const cutoff = useMemo(() => subDays(new Date(), parseInt(range)), [range]);

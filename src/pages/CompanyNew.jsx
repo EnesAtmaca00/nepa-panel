@@ -87,12 +87,18 @@ export default function CompanyNew() {
     queryKey: ["services"],
     queryFn: () => base44.entities.ServiceCatalog.list(),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: templates = [] } = useQuery({
     queryKey: ["recurring-templates"],
     queryFn: () => base44.entities.RecurringContentTemplate.list(),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const update = (patch) => setData(d => ({ ...d, ...patch }));

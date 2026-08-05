@@ -38,12 +38,18 @@ export default function Recurring() {
     queryKey: ["recurring-templates"],
     queryFn: () => base44.entities.RecurringContentTemplate.list(),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: companies = [] } = useQuery({
     queryKey: ["companies"],
     queryFn: () => base44.entities.Company.list("-created_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const today = todayISO();
@@ -53,6 +59,9 @@ export default function Recurring() {
     queryKey: ["recurring-instances-all"],
     queryFn: () => base44.entities.RecurringContentInstance.list("-target_date", 300),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const upcoming = instances.filter(i => i.target_date >= today && i.target_date <= weekEnd)

@@ -11,18 +11,27 @@ export default function AttentionWidget() {
     queryKey: ["attention-companies"],
     queryFn: () => base44.entities.Company.filter({ deleted: false, status: "active" }, "name", 300),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: ideas = [] } = useQuery({
     queryKey: ["attention-ideas"],
     queryFn: () => base44.entities.ContentIdea.filter({ deleted: false }, "-created_date", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const { data: invoices = [] } = useQuery({
     queryKey: ["attention-invoices"],
     queryFn: () => base44.entities.Invoice.filter({ deleted: false }, "-issue_date", 200),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const items = useMemo(() => {

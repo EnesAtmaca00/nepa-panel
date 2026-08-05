@@ -74,6 +74,9 @@ export default function SpecialDays() {
     queryKey: ["special-days"],
     queryFn: () => base44.entities.SpecialDay.list("name", 500),
     initialData: [],
+    // initialData react-query tarafından TAZE veri sayılıyor;
+    // staleTime ile birleşince sorgu hiç çalışmıyordu. 0 = hemen bayat.
+    initialDataUpdatedAt: 0,
   });
 
   const enriched = useMemo(() => {
