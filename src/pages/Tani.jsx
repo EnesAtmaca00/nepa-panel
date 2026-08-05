@@ -11,6 +11,7 @@
 // ediyor — app_users satırının varlığını ayrıca kontrol ederek.
 // ============================================================
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase, base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +34,46 @@ function Satir({ durum, baslik, detay }) {
         {detay && <p className="text-xs text-muted-foreground mt-0.5 break-words">{detay}</p>}
       </div>
     </div>
+  );
+}
+
+/**
+ * CANLI useQuery TESTİ
+ *
+ * Companies.jsx'in kullandığı çağrının BİREBİR aynısı — aynı queryKey,
+ * aynı queryFn, aynı initialData. Elle çalıştırılan testler geçiyor ama
+ * sayfalar boşsa, sorun tam olarak bu katmandadır.
+ *
+ * Burada liste doluysa Companies sayfasının da dolu olması gerekir;
+ * o zaman sorun sayfanın kendi filtreleme/arama mantığındadır.
+ */
+function CanliSorguTesti() {
+  const { data: firmalar = [], isLoading, isFetching, isError, error, dataUpdatedAt, status, fetchStatus } =
+    useQuery({
+      queryKey: ["tani-canli-firmalar"],
+      queryFn: () => base44.entities.Company.filter({ deleted: false }, "-created_date", 200),
+      initialData: [],
+      initialDataUpdatedAt: 0,
+    });
+
+  return (
+    <Card>
+      <CardContent className="p-4 space-y-2">
+        <p className="text-sm font-medium">Canlı useQuery testi</p>
+        <p className="text-xs text-muted-foreground">
+          durum: <b>{status}</b> · çekim: <b>{fetchStatus}</b>
+          {isLoading && " · ilk yükleme"}
+          {isFetching && " · çekiyor"}
+          {dataUpdatedAt ? ` · son güncelleme ${new Date(dataUpdatedAt).toLocaleTimeString("tr-TR")}` : " · HİÇ ÇEKİLMEDİ"}
+        </p>
+        {isError && <p className="text-xs text-red-600">Hata: {error?.message}</p>}
+        <p className="text-sm">
+          {firmalar.length > 0
+            ? `${firmalar.length} firma geldi: ` + firmalar.slice(0, 5).map(f => f.name).join(", ")
+            : "Liste boş — sorun useQuery katmanında."}
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -210,6 +251,9 @@ set active = true, role = 'admin', agency_role = 'admin';`;
           Veriler görünmüyorsa sebebini burası söyler.
         </p>
       </div>
+
+      {/* Sayfa açılır açılmaz çalışır — düğmeye basmaya gerek yok */}
+      <CanliSorguTesti />
 
       <Button onClick={calistir} disabled={calisiyor} className="gap-2">
         {calisiyor ? <><Loader2 className="w-4 h-4 animate-spin" /> Kontrol ediliyor…</> : "Kontrolleri Çalıştır"}
