@@ -27,9 +27,19 @@ export const AuthProvider = ({ children }) => {
   const appPublicSettings = { id: 'nepa-panel', public_settings: {} };
   const isLoadingPublicSettings = false;
 
-  /** Oturumdaki kullanıcıyı app_users profiliyle birleştirip yükler. */
-  const checkUserAuth = useCallback(async () => {
-    setIsLoadingAuth(true);
+  /**
+   * Oturumdaki kullanıcıyı app_users profiliyle birleştirip yükler.
+   *
+   * sessiz=true iken isLoadingAuth'a DOKUNMAZ.
+   *
+   * Neden gerekli: isLoadingAuth true olunca App.jsx tüm uygulamayı bir
+   * yükleme çarkıyla değiştiriyor. Bu da her bileşeni söküyor —
+   * kullanıcının yazdığı ama henüz kaydetmediği her şey siliniyor.
+   * Sekmeden çıkıp girmek Supabase'e token tazeletiyordu ve biz bunu
+   * "kullanıcı değişti" sanıp tüm ekranı sıfırlıyorduk.
+   */
+  const checkUserAuth = useCallback(async (sessiz = false) => {
+    if (!sessiz) setIsLoadingAuth(true);
     setAuthError(null);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -73,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       setAuthError({ type: 'auth_required', message: error.message || 'Oturum doğrulanamadı' });
     } finally {
-      setIsLoadingAuth(false);
+      if (!sessiz) setIsLoadingAuth(false);
       setAuthChecked(true);
     }
   }, []);
@@ -88,8 +98,16 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
         setAuthChecked(true);
         setIsLoadingAuth(false);
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        checkUserAuth();
+      } else if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+        // Supabase sekmeye geri dönüldüğünde token'ı tazeliyor ve bu
+        // olayları yayıyor. Kullanıcı DEĞİŞMİYOR — ekranı sıfırlamak
+        // için sebep yok. Sessizce doğrula: profil arka planda
+        // güncellenir, form içerikleri yerinde kalır.
+        checkUserAuth(true);
+      } else if (event === 'USER_UPDATED') {
+        // Burada gerçekten kullanıcı bilgisi değişmiş olabilir; yine de
+        // sessiz gidiyoruz, veri kaybettirmeye değmez.
+        checkUserAuth(true);
       }
     });
     return () => subscription?.unsubscribe();
