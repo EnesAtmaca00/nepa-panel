@@ -85,7 +85,23 @@ export const queryClientInstance = new QueryClient({
 			staleTime: 5 * 60 * 1000,
 			gcTime: 30 * 60 * 1000,
 			refetchOnWindowFocus: false,
-			refetchOnMount: false,
+
+			// refetchOnMount: false BURADAYDI VE HER ŞEYİ KIRIYORDU.
+			//
+			// O ayar "bileşen bağlandığında tazeleme" demek. initialData
+			// verilmiş bir sorgu daha ilk andan itibaren status='success'
+			// sayıldığı için, İLK ÇEKİM de dahil hiçbir zaman istek
+			// atılmıyordu. Teşhis ekranındaki kanıt:
+			//     durum: success · çekim: idle · HİÇ ÇEKİLMEDİ
+			//
+			// Varsayılan (true) doğru davranış: yalnızca veri BAYATSA
+			// çeker. staleTime 5 dakika olduğu için sekme dolaşmak yine
+			// ağa gitmiyor — asıl istediğimiz buydu. initialData ise
+			// initialDataUpdatedAt: 0 sayesinde bayat sayıldığından ilk
+			// çekim yapılıyor.
+			//
+			// İkisi birlikte çalışıyor; biri olmadan diğeri işe yaramaz.
+
 			retry: (sayi, err) => {
 				// Yetki ve oturum hatalarını tekrar denemenin anlamı yok
 				const { tur } = okunabilirHata(err);
