@@ -163,22 +163,43 @@ export default function WebProjectWizard({ open, onOpenChange, project, companie
     return true;
   };
 
+  /**
+   * HATA YAKALAMA YOKTU ve düğme "çalışmıyor" görünüyordu.
+   *
+   * ensureCreated() bir hata fırlattığında (ör. tabloda olmayan bir alan
+   * gönderildiğinde PostgREST tüm insert'i reddediyor) promise reddediyor,
+   * yakalayan olmadığı için ekranda hiçbir iz kalmıyor, adım da ilerlemiyordu.
+   * Kullanıcı düğmeye basıp hiçbir şey olmadığını görüyordu.
+   */
+  const [ilerliyor, setIlerliyor] = useState(false);
+
   const goNext = async () => {
-    if (step === 1) {
-      await ensureCreated();
-      setStep(2);
-    } else if (step === 2) {
-      // Pending debounce kaydını zorla
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-        saveTimerRef.current = null;
+    setIlerliyor(true);
+    try {
+      if (step === 1) {
+        await ensureCreated();
+        setStep(2);
+      } else if (step === 2) {
+        // Pending debounce kaydını zorla
+        if (saveTimerRef.current) {
+          clearTimeout(saveTimerRef.current);
+          saveTimerRef.current = null;
+        }
+        if (data.id) {
+          const toSave = { ...data };
+          toSave.estimated_page_count = toSave.page_count;
+          await base44.entities.WebsiteProject.update(data.id, toSave);
+        }
+        setStep(3);
       }
-      if (data.id) {
-        const toSave = { ...data };
-        toSave.estimated_page_count = toSave.page_count;
-        await base44.entities.WebsiteProject.update(data.id, toSave);
-      }
-      setStep(3);
+    } catch (e) {
+      console.error("[WebProjectWizard] ilerleme hatası:", e);
+      toast.error("Devam edilemedi", {
+        description: e?.message || "Bilinmeyen hata",
+        duration: 8000,
+      });
+    } finally {
+      setIlerliyor(false);
     }
   };
 
@@ -255,10 +276,10 @@ export default function WebProjectWizard({ open, onOpenChange, project, companie
             </Button>
             <Button
               onClick={goNext}
-              disabled={!canNext()}
+              disabled={!canNext() || ilerliyor}
               className="bg-orange-500 hover:bg-orange-600 text-white"
             >
-              İleri
+              {ilerliyor ? "Kaydediliyor…" : "İleri"}
               <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
